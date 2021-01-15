@@ -1,0 +1,62 @@
+{
+  "name": "mplaynet",
+  "version": "0.0.1",
+  "description": "Mesh WebRTC library",
+  "main": "dist/mplaynet.umd.js",
+  "types": "dist/mplaynet.d.ts",
+  "module": "dist/mplaynet.esm.min.js",
+  "keywords": [],
+  "exports": {
+    ".": {
+      "require": "./dist/mplaynet.umd.min.js",
+      "import": "./dist/mplaynet.esm.min.js"
+    }
+  },
+  "scripts": {
+    "test": "jest --coverage",
+    "docs": "typedoc src/mplaynet.ts",
+    "clean": "rimraf ./dist",
+    "build:types": "tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/mplaynet.d.ts src/mplaynet.ts",
+    "build:js": "rollup -c rollup.config.js",
+    "build:minjs:umd": "terser dist/mplaynet.umd.js --compress --mangle > dist/mplaynet.umd.min.js",
+    "build:minjs:esm": "terser dist/mplaynet.esm.js --compress --mangle > dist/mplaynet.esm.min.js",
+    "build:minjs": "npm run build:minjs:esm -s && npm run build:minjs:umd -s",
+    "build": "npm run clean && npm run build:js -s && npm run build:minjs -s && npm run build:types -s"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "repository": "github:supertorpe/mplaynet/",
+  "author": "supertorpe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/supertorpe/mplaynet/issues"
+  },
+  "homepage": "https://supertorpe.github.io/mplaynet/",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.1.0",
+    "@types/jest": "^26.0.20",
+    "@types/webrtc": "^0.0.26",
+    "husky": "^4.3.7",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.36.1",
+    "terser": "^5.5.1",
+    "ts-jest": "^26.4.4",
+    "tslib": "^2.1.0",
+    "typedoc": "^0.20.14",
+    "typescript": "^4.1.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "dependencies": {
+    "@deepstream/client": "^5.1.10",
+    "webrtc-adapter": "^7.7.0"
+  }
+}
