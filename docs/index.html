@@ -67,9 +67,13 @@
 				</a>
 				<p>Features:</p>
 				<ul>
-					<li>bla, bla, bla...</li>
-					<li>bla, bla, bla...</li>
-					<li>bla, bla, bla...</li>
+					<li>Encapsulates the management of multiple WebRTC connections</li>
+					<li>Provides multiple signaling mechanisms so you don&#39;t have to worry about the offer / answers / iceCandidates racking:</li>
+					<li>Signaling using Deepstream.io</li>
+					<li>[TO DO] Signaling using firebase</li>
+					<li>[TO DO] Automatically calculates latency and differences in internal clock timestamp between each pair of nodes</li>
+					<li>[TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them</li>
+					<li>[TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority</li>
 				</ul>
 				<a href="#install-and-usage" id="install-and-usage" style="color: inherit; text-decoration: none;">
 					<h2>Install and usage</h2>
@@ -89,12 +93,40 @@
 				<p>Add this script tag: <code>&lt;script src=&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet.umd.js&quot;&gt;&lt;/script&gt;</code></p>
 				<pre><code class="language-js"><span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">Mesh</span><span style="color: #000000"> } = </span><span style="color: #001080">mplaynet</span><span style="color: #000000">;</span>
 </code></pre>
+				<a href="#establish-connections-send-and-receive-messages" id="establish-connections-send-and-receive-messages" style="color: inherit; text-decoration: none;">
+					<h3>Establish connections, send and receive messages</h3>
+				</a>
+				<p>see demo folder for details</p>
+				<pre><code class="language-js"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">meshConfig</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">MeshConfig</span><span style="color: #000000">(...);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">mesh</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Mesh</span><span style="color: #000000">(</span><span style="color: #001080">meshConfig</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">signaller</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">DeepstreamSignaling</span><span style="color: #000000">(</span><span style="color: #001080">deepstreamUrl</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
+<span style="color: #008000">// create a new room...</span>
+<span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">hostRoom</span><span style="color: #000000">(</span><span style="color: #001080">roomId</span><span style="color: #000000">, </span><span style="color: #001080">username</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
+<span style="color: #008000">// ...or join an existin room</span>
+<span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">joinRoom</span><span style="color: #000000">(</span><span style="color: #001080">roomId</span><span style="color: #000000">, </span><span style="color: #001080">username</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">)</span>
+<span style="color: #000000"> </span><span style="color: #008000">// Triggered when a player joins the room or when he is ready to play.</span>
+<span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #001080">roomRecordEmitter</span><span style="color: #000000">.</span><span style="color: #795E26">addEventListener</span><span style="color: #000000">((</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">event</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span>
+<span style="color: #000000">  </span><span style="color: #008000">// when all players are ready, start pairing:</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (....</span><span style="color: #001080">al</span><span style="color: #000000"> </span><span style="color: #001080">players</span><span style="color: #000000"> </span><span style="color: #001080">ready</span><span style="color: #000000">...)</span>
+<span style="color: #000000">    </span><span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">startPairings</span><span style="color: #000000">(</span><span style="color: #001080">mesh</span><span style="color: #000000">).</span><span style="color: #795E26">then</span><span style="color: #000000">((</span><span style="color: #001080">ok</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">      </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">ok</span><span style="color: #000000">) {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// start game</span>
+<span style="color: #000000">      }</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">});</span>
+<span style="color: #008000">// send message to the peers</span>
+<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">broadcastMessage</span><span style="color: #000000">(</span><span style="color: #001080">message</span><span style="color: #000000">);</span>
+<span style="color: #008000">// receive messages from the peers</span>
+<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #001080">messageEmitter</span><span style="color: #000000">.</span><span style="color: #795E26">addEventListener</span><span style="color: #000000">((</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #008000">// uuid of the remote peer</span>
+<span style="color: #000000">  </span><span style="color: #008000">// i.e.  info = new Int16Array(message.data);</span>
+<span style="color: #000000">});</span>
+</code></pre>
 				<a href="#demos" id="demos" style="color: inherit; text-decoration: none;">
 					<h3>Demos</h3>
 				</a>
 				<ul>
-					<li><a href="https://codepen.io/supertorpe/pen/.....">Mesh 01 - bla, bla, bla...</a></li>
-					<li><a href="https://codepen.io/supertorpe/pen/.....">Mesh 02 - bla, bla, bla...</a></li>
+					<li><a href="https://0khp9.csb.app">Simple game in which you create or enter a room with other players.</a></li>
 				</ul>
 			</div>
 		</div>
