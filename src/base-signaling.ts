@@ -17,11 +17,12 @@ export abstract class BaseSignaling {
         this._roomRecordEmitter = new EventEmitter<RoomRecord>();
     }
 
-    public abstract hostRoom(roomId: string, username: string, uuid: string): void;
+    public abstract hostRoom(roomId: string, username: string, uuid: string): Promise<boolean>;
     public abstract joinRoom(roomId: string, username: string, uuid: string): Promise<boolean>;
     protected abstract saveRoomInfo(): void;
     protected abstract saveIceCandidate(uuid: string, candidate: string): void;
     protected abstract savePairing(mesh: Mesh, myIndex: number, index: number, peer: PeerRecord): void;
+    protected abstract savePairingRecord(info: PairingRecord, uuid: string): void;
 
     public upatePlayerStatus(ready: boolean) {
         if (this.roomRecord) {
@@ -33,6 +34,20 @@ export abstract class BaseSignaling {
                 this.saveRoomInfo();
             }
         }
+    }
+
+    protected roomRecordChanged(info: RoomRecord, roomId: string, username: string, uuid: string) {
+        if (!info || !info.peers) {
+            this.roomRecord = new RoomRecord(roomId, []);
+          } else {
+            this.roomRecord = info;
+          }
+          if (!this.roomRecord.peers.some((peer) => peer.uuid === uuid)) {
+            this.roomRecord.peers.push(new PeerRecord(username, uuid, false));
+            this.saveRoomInfo();
+          } else {
+            this._roomRecordEmitter.notify(uuid, info);
+          }
     }
 
     public startPairings(mesh: Mesh) {
@@ -58,8 +73,6 @@ export abstract class BaseSignaling {
             }
         });
     }
-
-    protected abstract savePairingRecord(info: PairingRecord, uuid: string): void;
 
     protected pairingRecordChanged(mesh: Mesh, info: PairingRecord, peer: PeerRecord, myIndex: number, index: number) {
         if (!info || !info.status) {

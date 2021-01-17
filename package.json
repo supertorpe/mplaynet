@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@deepstream/client": "^5.1.10",
+    "firebase": "^8.2.3",
     "webrtc-adapter": "^7.7.0"
   }
 }

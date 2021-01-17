@@ -2,7 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 
 export default {
   input: 'src/mplaynet.ts',
-  external: ['@deepstream/client'],
+  external: ['@deepstream/client','firebase/app'],
   output: [
     {
       file: 'dist/mplaynet.esm.js',
@@ -14,6 +14,7 @@ export default {
       name: 'mplaynet',
       globals: {
         '@deepstream/client': 'DeepstreamClient',
+        'firebase/app': 'firebase'
       },
     },
   ],

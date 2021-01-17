@@ -2,6 +2,7 @@ const {
   MeshConfig,
   Mesh,
   DeepstreamSignaling,
+  FirebaseSignaling,
   PeerRecord,
   uuidv4,
   generateRandomLetters,
@@ -16,11 +17,11 @@ const myUUID = uuidv4();
 const meshConfig = new MeshConfig(
   {
     iceServers: [
-      // TO DO : set iceServers
-    ],
+      // TO DO: set iceServers
+    ]
   },
   {
-    ordered: true,
+    ordered: true
   }
 );
 
@@ -30,10 +31,17 @@ const mesh = new Mesh(meshConfig, myUUID);
  * SIGNALING *
  *************/
 
-const signaller = new DeepstreamSignaling(
-  '',// TO DO : set deepstream.io server url
-  myUUID
-);
+const signaller =
+/*
+  new DeepstreamSignaling(DEEPSTREAM_URL);
+//*/
+//*
+    new FirebaseSignaling({
+      apiKey: FIREBASE_API_KEY,
+      authDomain: FIREBASE_AUTH_DOMAIN,
+      projectId: FIREBASE_PROJECT_ID
+    });
+//*/
 
 signaller.roomRecordEmitter.addEventListener((uuid, event) => {
   console.log('room info changed: ' + JSON.stringify(event));

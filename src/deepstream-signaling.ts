@@ -26,25 +26,16 @@ export class DeepstreamSignaling extends BaseSignaling {
     this.room = this.deepstreamClient.record.getRecord(`room_${roomId}`);
     this.subscriptions.push(this.room);
     this.room.subscribe((info: RoomRecord) => {
-      if (!info || !info.peers) {
-        this.roomRecord = new RoomRecord(roomId, []);
-      } else {
-        this.roomRecord = info;
-      }
-      if (!this.roomRecord.peers.some((peer) => peer.uuid === uuid)) {
-        this.roomRecord.peers.push(new PeerRecord(username, uuid, false));
-        this.saveRoomInfo();
-      } else {
-        this._roomRecordEmitter.notify(uuid, info);
-      }
+      this.roomRecordChanged(info, roomId, username, uuid);
     });
   }
 
-  public hostRoom(roomId: string, username: string, uuid: string) {
+  public hostRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
     this.bindRoom(roomId, username, uuid);
+    return new Promise<boolean>((resolve) => { resolve(true); });
   }
 
-  public joinRoom(roomId: string, username: string, uuid: string) {
+  public joinRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
     return this.deepstreamClient.record.has(`room_${roomId}`).then((value) => {
       if (value) {
         this.bindRoom(roomId, username, uuid);

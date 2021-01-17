@@ -9,7 +9,7 @@ Features:
 - Encapsulates the management of multiple WebRTC connections
 - Provides multiple signaling mechanisms so you don't have to worry about the offer / answers / iceCandidates racking:
 - Signaling using Deepstream.io
-- [TO DO] Signaling using firebase
+- Signaling using firebase
 - [TO DO] Automatically calculates latency and differences in internal clock timestamp between each pair of nodes
 - [TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them
 - [TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority
@@ -42,7 +42,15 @@ see demo folder for details
 ```js
 const meshConfig = new MeshConfig(...);
 const mesh = new Mesh(meshConfig, myUUID);
-const signaller = new DeepstreamSignaling(deepstreamUrl, myUUID);
+const signaller =
+  // deepstream
+  new DeepstreamSignaling(DEEPSTREAM_URL);
+  // OR firebase
+  new FirebaseSignaling({
+      apiKey: FIREBASE_API_KEY,
+      authDomain: FIREBASE_AUTH_DOMAIN,
+      projectId: FIREBASE_PROJECT_ID
+    });
 // create a new room...
 signaller.hostRoom(roomId, username, myUUID);
 // ...or join an existin room

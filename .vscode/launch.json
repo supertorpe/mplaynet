@@ -22,7 +22,7 @@
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\dist\\ella.umd.js",
+      "program": "${workspaceFolder}\\dist\\mplaynet.umd.js",
       "outFiles": ["${workspaceFolder}/**/*.js"]
     }
   ]
