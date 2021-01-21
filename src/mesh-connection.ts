@@ -70,6 +70,11 @@ export class MeshConnection {
     return this._systemMessageEmitter;
   }
 
+  get isOpen(): boolean {
+    return this._channel && this._channel.readyState === 'open' &&
+      this._systemChannel && this._systemChannel.readyState === 'open';
+  }
+
   public close() {
     if (this._systemChannel) this._systemChannel.close();
     if (this._channel) this._channel.close();

@@ -69,9 +69,12 @@ export abstract class BaseSignaling {
 
     public startPairings(mesh: Mesh) {
         return new Promise<boolean>((resolve) => {
-            mesh.channelOpenEmitter.addEventListener((_uuid, _event) => {
-                console.log('mesh opened');
-                resolve(true);
+            mesh.channelOpenEmitter.addEventListener((_uuid, opened) => {
+                const connectionCount = mesh.connectionCount();
+                const connectionsOpened = mesh.connectionsOpened();
+                console.log(`opened ${connectionsOpened} of ${connectionCount} connections`);
+                if (connectionsOpened === connectionCount)
+                    resolve(opened);
             });
             mesh.iceCandidateEmitter.addEventListener((uuid, candidate) => {
                 let sCandidate = JSON.stringify(candidate);

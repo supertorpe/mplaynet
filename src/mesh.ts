@@ -54,6 +54,17 @@ export class Mesh {
     });
   }
 
+  public connectionCount() {
+    return this.connections.length;
+  }
+
+  public connectionsOpened() {
+    return this.connections.reduce(
+      (total, conn) => (conn.isOpen ? ++total : total),
+      0
+    );
+  }
+
   private findConnection(uuid: string): MeshConnection | undefined {
     return this.connections.find((conn) => conn.uuid === uuid);
   }
