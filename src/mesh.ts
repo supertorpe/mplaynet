@@ -33,11 +33,17 @@ export class Mesh {
     connection.channelOpenEmitter.addEventListener((uuid, event) => {
       this._channelOpenEmitter.notify(uuid, event);
     });
+    connection.systemChannelOpenEmitter.addEventListener((uuid, opened) => {
+      if (opened) this.systemChannelOpened(uuid);
+    });
     connection.iceCandidateEmitter.addEventListener((uuid, event) => {
       this._iceCandidateEmitter.notify(uuid, event);
     });
     connection.messageEmitter.addEventListener((uuid, event) => {
       this._messageEmitter.notify(uuid, event);
+    });
+    connection.systemMessageEmitter.addEventListener((uuid, event) => {
+      this.systemMessageArrived(uuid, event);
     });
     this.connections.push(connection);
   }
@@ -76,15 +82,35 @@ export class Mesh {
     else throw new Error(`meshConnection ${uuid} not found`);
   }
 
-  public sendMessage(uuid: string, message: string) {
+  public sendMessage(uuid: string, message: string | Blob | ArrayBuffer | ArrayBufferView) {
     const conn = this.findConnection(uuid);
     if (conn) return conn.send(message);
     else throw new Error(`meshConnection ${uuid} not found`);
   }
 
-  public broadcastMessage(message: string) {
+  private sendSysMessage(uuid: string, message: string | Blob | ArrayBuffer | ArrayBufferView) {
+    const conn = this.findConnection(uuid);
+    if (conn) return conn.sendSys(message);
+    else throw new Error(`meshConnection ${uuid} not found`);
+  }
+
+  public broadcastMessage(message: string | Blob | ArrayBuffer | ArrayBufferView) {
     this.connections.forEach((conn) => {
       conn.send(message);
     });
+  }
+
+  private broadcastSysMessage(message: string | Blob | ArrayBuffer | ArrayBufferView) {
+    this.connections.forEach((conn) => {
+      conn.sendSys(message);
+    });
+  }
+
+  private systemChannelOpened(uuid: string) {
+
+  }
+
+  private systemMessageArrived(uuid: string, event: MessageEvent) {
+    
   }
 }
