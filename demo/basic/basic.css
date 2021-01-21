@@ -55,7 +55,10 @@ button {
   position: relative;
 }
 .player {
+  background-color: black;
   border: 2px black solid;
+  color: white;
+  font-weight: bold;
   width: 46px;
   height: 46px;
   position: absolute;

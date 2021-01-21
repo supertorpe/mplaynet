@@ -5,14 +5,3 @@ export function uuidv4() {
     return v.toString(16);
   });
 }
-
-const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-export function generateRandomLetters(length: number) {
-  let code = '';
-  for (let i = 0; i < length; i++) {
-    const ndx = Math.floor(Math.random() * LETTERS.length);
-    code += LETTERS[ndx];
-  }
-  return code;
-}

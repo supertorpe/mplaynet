@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { BaseSignaling } from "./base-signaling";
-import { Mesh } from "./mesh";
+import { Mesh } from "../mesh";
 import { PairingRecord, PeerRecord, RoomRecord } from "./records";
 
 export class FirebaseSignaling extends BaseSignaling {
@@ -17,13 +17,13 @@ export class FirebaseSignaling extends BaseSignaling {
         this.roomsCollectionRef = this.db.collection('rooms');
     }
 
-    private bindRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
+    private bindRoom(roomId: string, username: string): Promise<boolean> {
         return new Promise<boolean>((resolve) => {
             this.roomRef = this.roomsCollectionRef.doc(roomId);
             this.roomRef.onSnapshot((doc) => {
                 const data = doc.data();
                 if (data) {
-                    this.roomRecordChanged(JSON.parse(data.info), roomId, username, uuid);
+                    this.roomRecordChanged(JSON.parse(data.info), roomId, username, this._uuid);
                     resolve(true);
                 } else {
                     resolve(false);
@@ -32,14 +32,13 @@ export class FirebaseSignaling extends BaseSignaling {
         });
     }
 
-    public hostRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
-        this._uuid = uuid;
+    protected internalHostRoom(roomId: string, username: string): Promise<boolean> {
         return new Promise<boolean>((resolve) => {
             const roomRecord = new RoomRecord(roomId, []);
             this.roomRef = this.roomsCollectionRef.doc(roomId);
             this.roomRef.set({ info: JSON.stringify(roomRecord) })
                 .then(() => {
-                    this.bindRoom(roomId, username, uuid).then(ok => resolve(ok));
+                    this.bindRoom(roomId, username).then(ok => resolve(ok));
                 })
                 .catch((error) => {
                     console.log(error);
@@ -48,9 +47,8 @@ export class FirebaseSignaling extends BaseSignaling {
         });
     }
 
-    public joinRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
-        this._uuid = uuid;
-        return this.bindRoom(roomId, username, uuid);
+    protected internalJoinRoom(roomId: string, username: string): Promise<boolean> {
+        return this.bindRoom(roomId, username);
     }
 
     protected saveRoomInfo(): void {

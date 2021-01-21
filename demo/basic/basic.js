@@ -1,14 +1,22 @@
 const {
   MeshConfig,
-  Mesh,
-  DeepstreamSignaling,
-  FirebaseSignaling,
-  PeerRecord,
-  uuidv4,
-  generateRandomLetters,
+  Mesh
 } = mplaynet;
 
-const myUUID = uuidv4();
+
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+generateRandomLetters = (length) => {
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    const ndx = Math.floor(Math.random() * LETTERS.length);
+    code += LETTERS[ndx];
+  }
+  return code;
+}
+
+const myUUID = generateRandomLetters(10);
+console.log(myUUID);
 
 /*************
  * MESH      *
@@ -17,7 +25,7 @@ const myUUID = uuidv4();
 const meshConfig = new MeshConfig(
   {
     iceServers: [
-      // TO DO: set iceServers
+       // TO DO: fill iceServers
     ]
   },
   {
@@ -30,18 +38,6 @@ const mesh = new Mesh(meshConfig, myUUID);
 /*************
  * SIGNALING *
  *************/
-
-const signaller =
-/*
-  new DeepstreamSignaling(DEEPSTREAM_URL);
-//*/
-//*
-    new FirebaseSignaling({
-      apiKey: FIREBASE_API_KEY,
-      authDomain: FIREBASE_AUTH_DOMAIN,
-      projectId: FIREBASE_PROJECT_ID
-    });
-//*/
 
 signaller.roomRecordEmitter.addEventListener((uuid, event) => {
   console.log('room info changed: ' + JSON.stringify(event));
@@ -103,6 +99,7 @@ btnHost.addEventListener('click', () => {
     inputHostUsername.style.borderColor = 'red';
     return;
   }
+    btnHost.disabled = true;
   const roomId = generateRandomLetters(4);
   const username = inputHostUsername.value;
   signaller.hostRoom(roomId, username, myUUID);
@@ -120,6 +117,7 @@ btnJoin.addEventListener('click', () => {
     error = true;
   }
   if (error) return;
+    btnJoin.disabled = true;
   const roomId = inputRoomCode.value;
   const username = inputJoinUsername.value;
   signaller.joinRoom(roomId, username, myUUID).then((ok) => {

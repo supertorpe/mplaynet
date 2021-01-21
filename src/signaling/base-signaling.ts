@@ -1,5 +1,6 @@
-import { EventEmitter } from "./event-emitter";
-import { Mesh } from "./mesh";
+import { EventEmitter } from "../event-emitter";
+import { Mesh } from "../mesh";
+import { uuidv4 } from "../utils";
 import { PairingItem, PairingRecord, PeerRecord, RoomRecord } from "./records";
 
 export abstract class BaseSignaling {
@@ -13,12 +14,28 @@ export abstract class BaseSignaling {
         return this._roomRecordEmitter;
     }
 
+    get uuid(): string {
+        return this._uuid;
+    }
+
     constructor() {
         this._roomRecordEmitter = new EventEmitter<RoomRecord>();
     }
 
-    public abstract hostRoom(roomId: string, username: string, uuid: string): Promise<boolean>;
-    public abstract joinRoom(roomId: string, username: string, uuid: string): Promise<boolean>;
+    public hostRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
+        if (!uuid)
+            uuid = uuidv4();
+        this._uuid = uuid;
+        return this.internalHostRoom(roomId, username);
+    }
+    public joinRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
+        if (!uuid)
+            uuid = uuidv4();
+        this._uuid = uuid;
+        return this.internalJoinRoom(roomId, username);
+    }
+    protected abstract internalHostRoom(roomId: string, username: string): Promise<boolean>;
+    protected abstract internalJoinRoom(roomId: string, username: string): Promise<boolean>;
     protected abstract saveRoomInfo(): void;
     protected abstract saveIceCandidate(uuid: string, candidate: string): void;
     protected abstract savePairing(mesh: Mesh, myIndex: number, index: number, peer: PeerRecord): void;

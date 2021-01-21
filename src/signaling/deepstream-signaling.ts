@@ -1,7 +1,7 @@
 import { DeepstreamClient } from '@deepstream/client';
 import { Record } from '@deepstream/client/dist/src/record/record';
 import { BaseSignaling } from './base-signaling';
-import { Mesh } from './mesh';
+import { Mesh } from '../mesh';
 import { RoomRecord, PeerRecord, PairingRecord } from './records';
 
 export class DeepstreamSignaling extends BaseSignaling {
@@ -21,24 +21,23 @@ export class DeepstreamSignaling extends BaseSignaling {
     this.subscriptions.forEach((record) => record.unsubscribe(() => { }));
   }
 
-  private bindRoom(roomId: string, username: string, uuid: string) {
-    this._uuid = uuid;
+  private bindRoom(roomId: string, username: string) {
     this.room = this.deepstreamClient.record.getRecord(`room_${roomId}`);
     this.subscriptions.push(this.room);
     this.room.subscribe((info: RoomRecord) => {
-      this.roomRecordChanged(info, roomId, username, uuid);
+      this.roomRecordChanged(info, roomId, username, this._uuid);
     });
   }
 
-  public hostRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
-    this.bindRoom(roomId, username, uuid);
+  protected internalHostRoom(roomId: string, username: string): Promise<boolean> {
+    this.bindRoom(roomId, username);
     return new Promise<boolean>((resolve) => { resolve(true); });
   }
 
-  public joinRoom(roomId: string, username: string, uuid: string): Promise<boolean> {
+  protected internalJoinRoom(roomId: string, username: string): Promise<boolean> {
     return this.deepstreamClient.record.has(`room_${roomId}`).then((value) => {
       if (value) {
-        this.bindRoom(roomId, username, uuid);
+        this.bindRoom(roomId, username);
       }
       return value;
     });
