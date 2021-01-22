@@ -25,7 +25,7 @@ console.log(myUUID);
 const meshConfig = new MeshConfig(
   {
     iceServers: [
-       // TO DO: fill iceServers
+      // TO DO: fill iceServers
     ]
   },
   {
@@ -141,7 +141,7 @@ const WIDTH = 400;
 const HEIGHT = 300;
 const STEPSIZE = 5;
 const SIZE = 50;
-const NETLAPSE = 100;
+const NETLAPSE = 50;
 
 let players = [];
 let myPlayer;
@@ -158,6 +158,12 @@ const startGame = (peers) => {
     players.push(player);
     if (peer.uuid == myUUID) {
       myPlayer = player;
+    } else {
+      // send wellcome message and listen
+      const greeting = new TextEncoder().encode(`hello, I am ${myUUID}!`).buffer;
+      mesh.sendAndListen(peer.uuid, greeting).then(reply => {
+        console.log(new TextDecoder().decode(reply.body));
+      });
     }
     drawPlayer(player);
   }
@@ -174,6 +180,11 @@ const startGame = (peers) => {
   });
 
   mesh.messageEmitter.addEventListener((uuid, message) => {
+    if (message.awaitReply) {
+      const response = new TextEncoder().encode(`hello, I am ${myUUID}!`).buffer;
+      mesh.reply(uuid, message, response);
+      return;
+    }
     const move = new Int16Array(message.body);
     const player = players.find(player => player.uuid === uuid);
     if (player) {
@@ -181,7 +192,6 @@ const startGame = (peers) => {
       player.realLeft = move[1];
     }
   });
-
 
   window.requestAnimationFrame(gameLoop);
 };
@@ -336,10 +346,10 @@ const sendMove = (force) => {
   move[0] = myPlayer.top;
   move[1] = myPlayer.left;
   if (LAG === 0) {
-    mesh.broadcastMessage(move.buffer);
+    mesh.broadcast(move.buffer);
   } else {
     setTimeout(function () {
-      mesh.broadcastMessage(move.buffer);
+      mesh.broadcast(move.buffer);
     }, LAG);
   }
 };

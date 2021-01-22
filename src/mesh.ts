@@ -98,36 +98,36 @@ export class Mesh {
     else throw new Error(`meshConnection ${uuid} not found`);
   }
 
-  public sendMessage(uuid: string, message: ArrayBuffer) {
+  public send(uuid: string, message: ArrayBuffer): boolean {
     const conn = this.findConnection(uuid);
     if (conn) return conn.send(message);
     else throw new Error(`meshConnection ${uuid} not found`);
   }
 
-  // TO DO
-  /*
-  private sendSysMessage(uuid: string, message: ArrayBuffer) {
+  public sendAndListen(uuid: string, message: ArrayBuffer): Promise<Message> {
     const conn = this.findConnection(uuid);
-    if (conn) return conn.sendSys(message);
+    if (conn) return conn.sendAndListen(message);
     else throw new Error(`meshConnection ${uuid} not found`);
   }
-  */
 
-  public broadcastMessage(message: ArrayBuffer) {
+  public reply(uuid: string, originalMessage: Message, message: ArrayBuffer): boolean {
+    const conn = this.findConnection(uuid);
+    if (conn) return conn.reply(originalMessage, message);
+    else throw new Error(`meshConnection ${uuid} not found`);
+  }
+
+  public replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message> {
+    const conn = this.findConnection(uuid);
+    if (conn) return conn.replyAndListen(originalMessage, message);
+    else throw new Error(`meshConnection ${uuid} not found`);
+  }
+
+  public broadcast(message: ArrayBuffer) {
     return this._connections.reduce(
       (total, conn) => (conn.send(message) ? ++total : total),
       0
     );
   }
-
-  // TO DO
-  /*
-  private broadcastSysMessage(message: ArrayBuffer) {
-    this._connections.forEach((conn) => {
-      conn.sendSys(message);
-    });
-  }
-  */
 
   private systemMessageArrived(uuid: string, event: Message) {
     // TO DO

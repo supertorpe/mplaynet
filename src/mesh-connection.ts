@@ -1,6 +1,6 @@
 import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
-import { Message } from './message';
+import { Message, MESSAGE_REPLY, MESSAGE_REPLY_AND_LISTEN, MESSAGE_SEND, MESSAGE_SEND_AND_LISTEN } from './message';
 
 export class MeshConnection {
 
@@ -16,6 +16,10 @@ export class MeshConnection {
   private _messageEmitter: EventEmitter<Message>;
   private _systemMessageEmitter: EventEmitter<Message>;
   private _messageSeq = 1;
+  // cache with messages awaiting reply
+  // TO DO: webworker to cleanup old messages
+  // TO DO: config max cache size and/or max object age
+  protected _messagesAwaitingReply: Map<string, (message: Message | PromiseLike<Message>) => void> = new Map();
 
   constructor(private config: MeshConfig, private _uuid: string) {
     this._connectionReadyEmitter = new EventEmitter<boolean>();
@@ -64,12 +68,13 @@ export class MeshConnection {
       switch(ev.channel.label) {
         case MeshConnection.SYSTEM_CHANNEL_LABEL:
           ev.channel.onmessage = (evm) => {
-            this._systemMessageEmitter.notify(this._uuid, new Message(evm.data));
+            this.processReceivedMessage(this._systemMessageEmitter, Message.parse(evm.data));
+            this._systemMessageEmitter.notify(this._uuid, Message.parse(evm.data));
           }
           break;
         case MeshConnection.APP_CHANNEL_LABEL:
           ev.channel.onmessage = (evm) => {
-            this._messageEmitter.notify(this._uuid, new Message(evm.data));
+            this.processReceivedMessage(this._messageEmitter, Message.parse(evm.data));
           }
           break;
         default:
@@ -138,24 +143,92 @@ export class MeshConnection {
     return +sResult;
   }
 
-  public send(message: ArrayBuffer) {
-    if (this._channel.readyState !== 'open') {
+  private processReceivedMessage(emmiter: EventEmitter<Message>, message: Message) {
+    // if it is a reply, look for the original message in the message cache
+    if (message.type === MESSAGE_REPLY || message.type === MESSAGE_REPLY_AND_LISTEN) {
+      const key = message.sourceKey;
+      const sourceMessage = this._messagesAwaitingReply.get(key);
+      if (sourceMessage) {
+        this._messagesAwaitingReply.delete(key);
+        sourceMessage(message);
+        return;
+      }
+    }
+    emmiter.notify(this._uuid, message);
+  }
+
+  private internalSend(channel: RTCDataChannel, message: ArrayBuffer) {
+    if (channel.readyState !== 'open') {
       return false;
     }
-    const timestamp = this.getLocalTimestamp();
-    const theMessage = new Message(message, timestamp, this._messageSeq++);
-    this._channel.send(theMessage.fullMessage);
+    channel.send(message);
     return true;
   }
 
-  public sendSys(message: ArrayBuffer) {
-    if (this._systemChannel.readyState !== 'open') {
-      return false;
-    }
+  private sendByChannel(channel: RTCDataChannel, message: ArrayBuffer): boolean {
     const timestamp = this.getLocalTimestamp();
-    const theMessage = new Message(message, timestamp, this._messageSeq++);
-    this._systemChannel.send(theMessage.fullMessage);
-    return true;
+    const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_SEND);
+    return this.internalSend(channel, theMessage.fullMessage);
+  }
+
+  private sendAndListenBychannel(channel: RTCDataChannel, message: ArrayBuffer): Promise<Message> {
+    return new Promise<Message>(resolve => {
+      const timestamp = this.getLocalTimestamp();
+      const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_SEND_AND_LISTEN);
+      if (this.internalSend(channel, theMessage.fullMessage)) {
+        // CAUTION: unlikely race condition if reply arrives before message is cached
+        this._messagesAwaitingReply.set(theMessage.key, resolve);
+      }
+    });
+  }
+
+  private replyByChannel(channel: RTCDataChannel, originalMessage: Message, message: ArrayBuffer): boolean {
+    const timestamp = this.getLocalTimestamp();
+    const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_REPLY, originalMessage.timestamp, originalMessage.sequence);
+    return this.internalSend(channel, theMessage.fullMessage);
+  }
+
+  private replyAndListenByChannel(channel: RTCDataChannel, originalMessage: Message, message: ArrayBuffer): Promise<Message> {
+    return new Promise<Message>(resolve => {
+      const timestamp = this.getLocalTimestamp();
+      const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_REPLY_AND_LISTEN, originalMessage.timestamp, originalMessage.sequence);
+      if (this.internalSend(channel, theMessage.fullMessage)) {
+        // CAUTION: unlikely race condition if reply arrives before message is cached
+        this._messagesAwaitingReply.set(theMessage.key, resolve);
+      }
+    });
+  }
+
+  public send(message: ArrayBuffer): boolean {
+    return this.sendByChannel(this._channel, message);
+  }
+
+  public sendSys(message: ArrayBuffer): boolean {
+    return this.sendByChannel(this._systemChannel, message);
+  }
+
+  public sendAndListen(message: ArrayBuffer): Promise<Message> {
+    return this.sendAndListenBychannel(this._channel, message);
+  }
+
+  public sendAndListenSys(message: ArrayBuffer): Promise<Message> {
+    return this.sendAndListenBychannel(this._systemChannel, message);
+  }
+
+  public reply(originalMessage: Message, message: ArrayBuffer): boolean {
+    return this.replyByChannel(this._channel, originalMessage, message);
+  }
+
+  public replySys(originalMessage: Message, message: ArrayBuffer): boolean {
+    return this.replyByChannel(this._systemChannel, originalMessage, message);
+  }
+
+  public replyAndListen(originalMessage: Message, message: ArrayBuffer): Promise<Message> {
+    return this.replyAndListenByChannel(this._channel, originalMessage, message);
+  }
+
+  public replyAndListenSys(originalMessage: Message, message: ArrayBuffer): Promise<Message> {
+    return this.replyAndListenByChannel(this._systemChannel, originalMessage, message);
   }
 
 }
