@@ -40,6 +40,7 @@ export abstract class BaseSignaling {
     protected abstract saveIceCandidate(uuid: string, candidate: string): void;
     protected abstract savePairing(mesh: Mesh, myIndex: number, index: number, peer: PeerRecord): void;
     protected abstract savePairingRecord(info: PairingRecord, uuid: string): void;
+    protected abstract cleanup(): void;
 
     public upatePlayerStatus(ready: boolean) {
         if (this.roomRecord) {
@@ -73,8 +74,11 @@ export abstract class BaseSignaling {
                 const connectionCount = mesh.connectionCount();
                 const connectionsOpened = mesh.connectionsOpened();
                 console.log(`opened ${connectionsOpened} of ${connectionCount} connections`);
-                if (connectionsOpened === connectionCount)
+                // TO DO: wait for all peers to be connected to everyone else, not just me
+                if (connectionsOpened === connectionCount) {
+                    this.cleanup();
                     resolve(opened);
+                }
             });
             mesh.iceCandidateEmitter.addEventListener((uuid, candidate) => {
                 let sCandidate = JSON.stringify(candidate);
@@ -98,23 +102,25 @@ export abstract class BaseSignaling {
         if (!info || !info.status) {
             if (myIndex < index) {
                 mesh.createConnection(peer.uuid);
-                mesh.createOffer(peer.uuid).then((offer) => {
-                    console.log('create offer');
-                    info = new PairingRecord(
-                        1,
-                        this._uuid,
-                        peer.uuid,
-                        [],
-                        [],
-                        JSON.stringify(offer),
-                        ''
-                    );
-                    this.pairingMap.set(
-                        peer.uuid,
-                        new PairingItem([], false, false)
-                    );
-                    this.savePairingRecord(info, peer.uuid);
-                });
+                setTimeout(() => { // HACK
+                    mesh.createOffer(peer.uuid).then((offer) => {
+                        console.log('create offer');
+                        info = new PairingRecord(
+                            1,
+                            this._uuid,
+                            peer.uuid,
+                            [],
+                            [],
+                            JSON.stringify(offer),
+                            ''
+                        );
+                        this.pairingMap.set(
+                            peer.uuid,
+                            new PairingItem([], false, false)
+                        );
+                        this.savePairingRecord(info, peer.uuid);
+                    });
+                }, 0); 
             }
         } else {
             let pairingItem = this.pairingMap.get(peer.uuid);
@@ -154,8 +160,12 @@ export abstract class BaseSignaling {
                     !pairingItem.iceCandidatesDone.includes(candidate)
                 ) {
                     pairingItem.iceCandidatesDone.push(candidate);
-                    console.log('add candidate: ' + JSON.stringify(candidate));
-                    mesh.addIceCandidate(peer.uuid, JSON.parse(candidate));
+                    const iceCandidate: RTCIceCandidateInit = JSON.parse(candidate);
+                    if (iceCandidate.candidate) {
+                        console.log('add candidate: ' + candidate);
+                        mesh.addIceCandidate(peer.uuid, iceCandidate);
+                    }
+                    
                 }
             });
         }

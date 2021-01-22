@@ -17,6 +17,17 @@ export class FirebaseSignaling extends BaseSignaling {
         this.roomsCollectionRef = this.db.collection('rooms');
     }
 
+    protected cleanup() {
+        // HACK: remove timer when where are sure all peers are connected
+        // and can safely delete the info
+        setTimeout(() => {
+            if (this.roomRef) this.roomRef.delete();
+            for (const [key, value] of this.pairRecordMap.entries()) {
+                value.delete();
+            }
+        }, 5000);
+    }
+
     private bindRoom(roomId: string, username: string): Promise<boolean> {
         return new Promise<boolean>((resolve) => {
             this.roomRef = this.roomsCollectionRef.doc(roomId);

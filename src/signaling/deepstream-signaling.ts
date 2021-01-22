@@ -17,10 +17,17 @@ export class DeepstreamSignaling extends BaseSignaling {
     this.deepstreamClient.login();
   }
 
-  public close() {
-    this.subscriptions.forEach((record) => record.unsubscribe(() => { }));
+  protected cleanup() {
+      // HACK: remove timer when where are sure all peers are connected
+      // and can safely delete the info
+      setTimeout(() => {
+        this.subscriptions.forEach((record) => {
+          record.unsubscribe(() => { });
+          record.delete();
+        });
+    }, 5000);
   }
-
+  
   private bindRoom(roomId: string, username: string) {
     this.room = this.deepstreamClient.record.getRecord(`room_${roomId}`);
     this.subscriptions.push(this.room);
