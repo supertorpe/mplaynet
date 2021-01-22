@@ -1,5 +1,6 @@
 import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
+import { Message } from './message';
 
 export class MeshConnection {
 
@@ -12,15 +13,16 @@ export class MeshConnection {
   private _channelOpenEmitter: EventEmitter<boolean>;
   private _systemChannelOpenEmitter: EventEmitter<boolean>;
   private _iceCandidateEmitter: EventEmitter<RTCIceCandidate>;
-  private _messageEmitter: EventEmitter<MessageEvent>;
-  private _systemMessageEmitter: EventEmitter<MessageEvent>;
+  private _messageEmitter: EventEmitter<Message>;
+  private _systemMessageEmitter: EventEmitter<Message>;
+  private _messageSeq = 1;
 
   constructor(private config: MeshConfig, private _uuid: string) {
     this._channelOpenEmitter = new EventEmitter<any>();
     this._systemChannelOpenEmitter = new EventEmitter<any>();
     this._iceCandidateEmitter = new EventEmitter<RTCIceCandidate>();
-    this._messageEmitter = new EventEmitter<MessageEvent>();
-    this._systemMessageEmitter = new EventEmitter<MessageEvent>();
+    this._messageEmitter = new EventEmitter<Message>();
+    this._systemMessageEmitter = new EventEmitter<Message>();
     this._connection = new RTCPeerConnection(this.config.rtcConfig);
     this._connection.onicecandidate = (event) => {
       if (event.candidate)
@@ -37,10 +39,14 @@ export class MeshConnection {
     this._connection.ondatachannel = (ev) => {
       switch(ev.channel.label) {
         case MeshConnection.SYSTEM_CHANNEL_LABEL:
-          ev.channel.onmessage = (evm) => this._systemMessageEmitter.notify(this._uuid, evm);
+          ev.channel.onmessage = (evm) => {
+            this._systemMessageEmitter.notify(this._uuid, new Message(evm.data));
+          }
           break;
         case MeshConnection.APP_CHANNEL_LABEL:
-          ev.channel.onmessage = (evm) => this._messageEmitter.notify(this._uuid, evm);
+          ev.channel.onmessage = (evm) => {
+            this._messageEmitter.notify(this._uuid, new Message(evm.data));
+          }
           break;
         default:
       }
@@ -63,10 +69,10 @@ export class MeshConnection {
   get iceCandidateEmitter(): EventEmitter<RTCIceCandidate> {
     return this._iceCandidateEmitter;
   }
-  get messageEmitter(): EventEmitter<MessageEvent> {
+  get messageEmitter(): EventEmitter<Message> {
     return this._messageEmitter;
   }
-  get systemMessageEmitter(): EventEmitter<MessageEvent> {
+  get systemMessageEmitter(): EventEmitter<Message> {
     return this._systemMessageEmitter;
   }
 
@@ -106,12 +112,21 @@ export class MeshConnection {
     return this._connection.setRemoteDescription(answer);
   }
 
-  public send(message: string | Blob | ArrayBuffer | ArrayBufferView) {
-    this._channel.send(message);
+  private getLocalTimestamp(): number {
+    const sResult = new Date().valueOf().toString().substring(3);
+    return +sResult;
   }
 
-  public sendSys(message: string | Blob | ArrayBuffer | ArrayBufferView) {
-    this._systemChannel.send(message);
+  public send(message: ArrayBuffer) {
+    const timestamp = this.getLocalTimestamp();
+    const theMessage = new Message(message, timestamp, this._messageSeq++);
+    this._channel.send(theMessage.fullMessage);
+  }
+
+  public sendSys(message: ArrayBuffer) {
+    const timestamp = this.getLocalTimestamp();
+    const theMessage = new Message(message, timestamp, this._messageSeq++);
+    this._systemChannel.send(theMessage.fullMessage);
   }
 
 }

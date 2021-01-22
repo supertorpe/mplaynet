@@ -159,7 +159,7 @@ const startGame = (peers) => {
     drawPlayer(player);
   }
   mesh.messageEmitter.addEventListener((uuid, message) => {
-    const move = new Int16Array(message.data);
+    const move = new Int16Array(message.body);
     const player = players[move[0]];
     if (player) {
       player.realTop = move[1];
@@ -320,10 +320,10 @@ const sendMove = (force) => {
   move[1] = myPlayer.top;
   move[2] = myPlayer.left;
   if (LAG === 0) {
-    mesh.broadcastMessage(move);
+    mesh.broadcastMessage(move.buffer);
   } else {
     setTimeout(function () {
-      mesh.broadcastMessage(move);
+      mesh.broadcastMessage(move.buffer);
     }, LAG);
   }
 };
