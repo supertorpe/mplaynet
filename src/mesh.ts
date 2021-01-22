@@ -131,6 +131,6 @@ export class Mesh {
 
   private systemMessageArrived(uuid: string, event: Message) {
     // TO DO
-    console.log(`systemMessageArrived(${uuid},${event})`);
+    //console.log(`systemMessageArrived(${uuid},${event})`);
   }
 }

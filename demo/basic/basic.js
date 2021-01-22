@@ -29,7 +29,7 @@ const meshConfig = new MeshConfig(
     ]
   },
   {
-    ordered: true
+    ordered: false, maxRetransmits: 1
   }
 );
 
@@ -159,10 +159,11 @@ const startGame = (peers) => {
     if (peer.uuid == myUUID) {
       myPlayer = player;
     } else {
-      // send wellcome message and listen
-      const greeting = new TextEncoder().encode(`hello, I am ${myUUID}!`).buffer;
+      // send welcome message and wait for response
+      const message = `hello, I am ${myUUID}!`;
+      const greeting = new TextEncoder().encode(message).buffer;
       mesh.sendAndListen(peer.uuid, greeting).then(reply => {
-        console.log(new TextDecoder().decode(reply.body));
+        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my message "${message}"`);
       });
     }
     drawPlayer(player);
@@ -181,7 +182,9 @@ const startGame = (peers) => {
 
   mesh.messageEmitter.addEventListener((uuid, message) => {
     if (message.awaitReply) {
-      const response = new TextEncoder().encode(`hello, I am ${myUUID}!`).buffer;
+      const messageReceived = new TextDecoder().decode(message.body);
+      console.log(`received: ${messageReceived}`);
+      const response = new TextEncoder().encode('Nice to meet you').buffer;
       mesh.reply(uuid, message, response);
       return;
     }

@@ -9,12 +9,17 @@
  *   - if (type == 3 || type == 4)
  *     - source timestamp: 8 bytes
  *     - source sequence: 2 bytes
+ * 
+ * SYSTEM MESSAGES
+ *   - body = [1] => ping
  *************************************/
 
 export const MESSAGE_SEND             = 1;
 export const MESSAGE_SEND_AND_LISTEN  = 2;
 export const MESSAGE_REPLY            = 3;
 export const MESSAGE_REPLY_AND_LISTEN = 4;
+
+export const SYSTEM_MESSAGE_PING      = 1;
 
 export class Message {
     private _timestamp: number;

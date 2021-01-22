@@ -19,7 +19,7 @@ Features:
     - reply(uuid: string, originalMessage: Message, message: ArrayBuffer): boolean
     - replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message>
     - broadcast(message: ArrayBuffer)
-- [TO DO] Automatically calculates latency and differences in internal clock timestamp between each pair of nodes
+- Automatically calculates latency and differences in internal clock timestamp between each pair of nodes
 - [TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them
 - [TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority
 
@@ -95,6 +95,7 @@ signaller.roomRecordEmitter.addEventListener((uuid, event) => {
       }
     });
 });
+
 // broadcast a message to all peers
 const message = new ArrayBuffer(size);
 mesh.broadcast(message);
