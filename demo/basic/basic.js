@@ -117,11 +117,14 @@ btnJoin.addEventListener('click', () => {
     error = true;
   }
   if (error) return;
-    btnJoin.disabled = true;
+  btnJoin.disabled = true;
   const roomId = inputRoomCode.value;
   const username = inputJoinUsername.value;
   signaller.joinRoom(roomId, username, myUUID).then((ok) => {
-    if (!ok) alert('Room does not exists');
+    if (!ok) {
+      alert('Room does not exists');
+      btnJoin.disabled = false;
+    }
   });
 });
 btnReady.addEventListener('click', () => {
@@ -158,6 +161,18 @@ const startGame = (peers) => {
     }
     drawPlayer(player);
   }
+
+  mesh.connectionReadyEmitter.addEventListener((uuid, ready) => {
+    if (!ready) { // player disconnected
+      const player = players.find(player => player.uuid === uuid);
+      if (player) {
+        players.splice(player.index, 1);
+        const object = document.querySelector(player.selector);
+        object.classList.add("disconnected");
+      }
+    }
+  });
+
   mesh.messageEmitter.addEventListener((uuid, message) => {
     const move = new Int16Array(message.body);
     const player = players[move[0]];
@@ -166,6 +181,8 @@ const startGame = (peers) => {
       player.realLeft = move[2];
     }
   });
+
+
   window.requestAnimationFrame(gameLoop);
 };
 

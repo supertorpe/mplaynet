@@ -69,15 +69,20 @@ export abstract class BaseSignaling {
     }
 
     public startPairings(mesh: Mesh) {
+        let pairing = true;
         return new Promise<boolean>((resolve) => {
-            mesh.channelOpenEmitter.addEventListener((_uuid, opened) => {
+            mesh.connectionReadyEmitter.addEventListener((_uuid, ready) => {
+                if (!pairing) {
+                    return;
+                }
                 const connectionCount = mesh.connectionCount();
                 const connectionsOpened = mesh.connectionsOpened();
                 console.log(`opened ${connectionsOpened} of ${connectionCount} connections`);
                 // TO DO: wait for all peers to be connected to everyone else, not just me
                 if (connectionsOpened === connectionCount) {
+                    pairing = false;
                     this.cleanup();
-                    resolve(opened);
+                    resolve(ready);
                 }
             });
             mesh.iceCandidateEmitter.addEventListener((uuid, candidate) => {

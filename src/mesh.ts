@@ -4,13 +4,13 @@ import { MeshConnection } from './mesh-connection';
 import { Message } from './message';
 
 export class Mesh {
-  private connections: MeshConnection[] = [];
-  private _channelOpenEmitter: EventEmitter<boolean>;
+  private _connections: MeshConnection[] = [];
+  private _connectionReadyEmitter: EventEmitter<boolean>;
   private _iceCandidateEmitter: EventEmitter<RTCIceCandidate>;
   private _messageEmitter: EventEmitter<Message>;
 
   constructor(private config: MeshConfig, private _uuid: string) {
-    this._channelOpenEmitter = new EventEmitter<any>();
+    this._connectionReadyEmitter = new EventEmitter<boolean>();
     this._iceCandidateEmitter = new EventEmitter<RTCIceCandidate>();
     this._messageEmitter = new EventEmitter<Message>();
   }
@@ -18,8 +18,8 @@ export class Mesh {
   get uuid(): string {
     return this._uuid;
   }
-  get channelOpenEmitter(): EventEmitter<boolean> {
-    return this._channelOpenEmitter;
+  get connectionReadyEmitter(): EventEmitter<boolean> {
+    return this._connectionReadyEmitter;
   }
   get iceCandidateEmitter(): EventEmitter<RTCIceCandidate> {
     return this._iceCandidateEmitter;
@@ -31,11 +31,15 @@ export class Mesh {
   public createConnection(uuid: string) {
     console.log('createConnection ' + uuid);
     const connection = new MeshConnection(this.config, uuid);
-    connection.channelOpenEmitter.addEventListener((uuid, opened) => {
-      this._channelOpenEmitter.notify(uuid, opened);
-    });
-    connection.systemChannelOpenEmitter.addEventListener((uuid, opened) => {
-      if (opened) this.systemChannelOpened(uuid);
+    connection.connectionReadyEmitter.addEventListener((uuid, ready) => {
+      if (!ready) {
+        const connIdx = this._connections.findIndex(conn => conn.uuid === uuid);
+        if (connIdx >= 0) {
+          this._connections[connIdx].close();
+          this._connections.splice(connIdx, 1);
+        }
+      }
+      this._connectionReadyEmitter.notify(uuid, ready);
     });
     connection.iceCandidateEmitter.addEventListener((uuid, event) => {
       this._iceCandidateEmitter.notify(uuid, event);
@@ -46,28 +50,28 @@ export class Mesh {
     connection.systemMessageEmitter.addEventListener((uuid, event) => {
       this.systemMessageArrived(uuid, event);
     });
-    this.connections.push(connection);
+    this._connections.push(connection);
   }
 
   public close() {
-    this.connections.forEach((conn) => {
+    this._connections.forEach((conn) => {
       conn.close();
     });
   }
 
   public connectionCount() {
-    return this.connections.length;
+    return this._connections.length;
   }
 
   public connectionsOpened() {
-    return this.connections.reduce(
+    return this._connections.reduce(
       (total, conn) => (conn.isOpen ? ++total : total),
       0
     );
   }
 
   private findConnection(uuid: string): MeshConnection | undefined {
-    return this.connections.find((conn) => conn.uuid === uuid);
+    return this._connections.find((conn) => conn.uuid === uuid);
   }
 
   public addIceCandidate(uuid: string, candidate: RTCIceCandidateInit) {
@@ -110,24 +114,20 @@ export class Mesh {
   */
 
   public broadcastMessage(message: ArrayBuffer) {
-    this.connections.forEach((conn) => {
-      conn.send(message);
-    });
+    return this._connections.reduce(
+      (total, conn) => (conn.send(message) ? ++total : total),
+      0
+    );
   }
 
   // TO DO
   /*
   private broadcastSysMessage(message: ArrayBuffer) {
-    this.connections.forEach((conn) => {
+    this._connections.forEach((conn) => {
       conn.sendSys(message);
     });
   }
   */
- 
-  private systemChannelOpened(uuid: string) {
-    // TO DO
-    console.log(`systemChannelOpened(${uuid})`);
-  }
 
   private systemMessageArrived(uuid: string, event: Message) {
     // TO DO
