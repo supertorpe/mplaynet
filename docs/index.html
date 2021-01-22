@@ -70,7 +70,7 @@
 					<li>Encapsulates the management of multiple WebRTC connections</li>
 					<li>Provides multiple signaling mechanisms so you don&#39;t have to worry about the offer / answers / iceCandidates racking:</li>
 					<li>Signaling using Deepstream.io</li>
-					<li>[TO DO] Signaling using firebase</li>
+					<li>Signaling using firebase</li>
 					<li>[TO DO] Automatically calculates latency and differences in internal clock timestamp between each pair of nodes</li>
 					<li>[TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them</li>
 					<li>[TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority</li>
@@ -99,7 +99,15 @@
 				<p>see demo folder for details</p>
 				<pre><code class="language-js"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">meshConfig</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">MeshConfig</span><span style="color: #000000">(...);</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">mesh</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Mesh</span><span style="color: #000000">(</span><span style="color: #001080">meshConfig</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">signaller</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">DeepstreamSignaling</span><span style="color: #000000">(</span><span style="color: #001080">deepstreamUrl</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">signaller</span><span style="color: #000000"> =</span>
+<span style="color: #000000">  </span><span style="color: #008000">// deepstream</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">DeepstreamSignaling</span><span style="color: #000000">(</span><span style="color: #0070C1">DEEPSTREAM_URL</span><span style="color: #000000">);</span>
+<span style="color: #000000">  </span><span style="color: #008000">// OR firebase</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">FirebaseSignaling</span><span style="color: #000000">({</span>
+<span style="color: #000000">      </span><span style="color: #001080">apiKey:</span><span style="color: #000000"> </span><span style="color: #0070C1">FIREBASE_API_KEY</span><span style="color: #000000">,</span>
+<span style="color: #000000">      </span><span style="color: #001080">authDomain:</span><span style="color: #000000"> </span><span style="color: #0070C1">FIREBASE_AUTH_DOMAIN</span><span style="color: #000000">,</span>
+<span style="color: #000000">      </span><span style="color: #001080">projectId:</span><span style="color: #000000"> </span><span style="color: #0070C1">FIREBASE_PROJECT_ID</span>
+<span style="color: #000000">    });</span>
 <span style="color: #008000">// create a new room...</span>
 <span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">hostRoom</span><span style="color: #000000">(</span><span style="color: #001080">roomId</span><span style="color: #000000">, </span><span style="color: #001080">username</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
 <span style="color: #008000">// ...or join an existin room</span>
@@ -141,10 +149,7 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="classes/deepstreamsignaling.html" class="tsd-kind-icon">Deepstream<wbr>Signaling</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/firebasesignaling.html" class="tsd-kind-icon">Firebase<wbr>Signaling</a>
+						<a href="classes/localsignaling.html" class="tsd-kind-icon">Local<wbr>Signaling</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/mesh.html" class="tsd-kind-icon">Mesh</a>
@@ -154,12 +159,6 @@
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/peerrecord.html" class="tsd-kind-icon">Peer<wbr>Record</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#generaterandomletters" class="tsd-kind-icon">generate<wbr>Random<wbr>Letters</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#uuidv4" class="tsd-kind-icon">uuidv4</a>
 					</li>
 				</ul>
 			</nav>

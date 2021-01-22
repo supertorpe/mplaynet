@@ -22,7 +22,7 @@ export class FirebaseSignaling extends BaseSignaling {
         // and can safely delete the info
         setTimeout(() => {
             if (this.roomRef) this.roomRef.delete();
-            for (const [key, value] of this.pairRecordMap.entries()) {
+            for (const value of this.pairRecordMap.values()) {
                 value.delete();
             }
         }, 5000);

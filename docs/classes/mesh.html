@@ -107,11 +107,15 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#addicecandidate" class="tsd-kind-icon">add<wbr>Ice<wbr>Candidate</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#broadcastmessage" class="tsd-kind-icon">broadcast<wbr>Message</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#close" class="tsd-kind-icon">close</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#connectioncount" class="tsd-kind-icon">connection<wbr>Count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#connectionsopened" class="tsd-kind-icon">connections<wbr>Opened</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#createanswer" class="tsd-kind-icon">create<wbr>Answer</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#createconnection" class="tsd-kind-icon">create<wbr>Connection</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#createoffer" class="tsd-kind-icon">create<wbr>Offer</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="mesh.html#findconnection" class="tsd-kind-icon">find<wbr>Connection</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#sendmessage" class="tsd-kind-icon">send<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="mesh.html#systemchannelopened" class="tsd-kind-icon">system<wbr>Channel<wbr>Opened</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="mesh.html#systemmessagearrived" class="tsd-kind-icon">system<wbr>Message<wbr>Arrived</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mesh.html#verifyanswer" class="tsd-kind-icon">verify<wbr>Answer</a></li>
 							</ul>
 						</section>
@@ -130,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L9">mesh.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L10">mesh.ts:10</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -155,7 +159,7 @@
 					<div class="tsd-signature tsd-kind-icon">_channel<wbr>Open<wbr>Emitter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L7">mesh.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L8">mesh.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -165,17 +169,17 @@
 					<div class="tsd-signature tsd-kind-icon">_ice<wbr>Candidate<wbr>Emitter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RTCIceCandidate</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L8">mesh.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L9">mesh.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_messageemitter" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _message<wbr>Emitter</h3>
-					<div class="tsd-signature tsd-kind-icon">_message<wbr>Emitter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">_message<wbr>Emitter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Message</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L9">mesh.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L10">mesh.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -185,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">connections<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MeshConnection</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L6">mesh.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L7">mesh.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -202,7 +206,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L20">mesh.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L21">mesh.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -219,7 +223,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L23">mesh.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L24">mesh.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RTCIceCandidate</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -230,16 +234,16 @@
 					<a name="messageemitter" class="tsd-anchor"></a>
 					<h3>message<wbr>Emitter</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> messageEmitter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> messageEmitter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Message</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L26">mesh.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L27">mesh.ts:27</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Message</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -253,7 +257,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L17">mesh.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L18">mesh.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -273,7 +277,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L55">mesh.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L73">mesh.ts:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -293,19 +297,19 @@
 					<a name="broadcastmessage" class="tsd-anchor"></a>
 					<h3>broadcast<wbr>Message</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">broadcast<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">broadcast<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L85">mesh.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L112">mesh.ts:112</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>message: <span class="tsd-signature-type">string</span></h5>
+									<h5>message: <span class="tsd-signature-type">ArrayBuffer</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -322,10 +326,44 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L45">mesh.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L52">mesh.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="connectioncount" class="tsd-anchor"></a>
+					<h3>connection<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">connection<wbr>Count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L58">mesh.ts:58</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="connectionsopened" class="tsd-anchor"></a>
+					<h3>connections<wbr>Opened</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">connections<wbr>Opened<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L62">mesh.ts:62</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -339,7 +377,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L67">mesh.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L85">mesh.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -365,7 +403,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L30">mesh.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L31">mesh.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -388,7 +426,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L61">mesh.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L79">mesh.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -411,7 +449,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L51">mesh.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L69">mesh.ts:69</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -428,13 +466,13 @@
 					<a name="sendmessage" class="tsd-anchor"></a>
 					<h3>send<wbr>Message</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">send<wbr>Message<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">send<wbr>Message<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L79">mesh.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L97">mesh.ts:97</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -443,7 +481,56 @@
 									<h5>uuid: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>message: <span class="tsd-signature-type">string</span></h5>
+									<h5>message: <span class="tsd-signature-type">ArrayBuffer</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="systemchannelopened" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> system<wbr>Channel<wbr>Opened</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">system<wbr>Channel<wbr>Opened<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L127">mesh.ts:127</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>uuid: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="systemmessagearrived" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> system<wbr>Message<wbr>Arrived</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">system<wbr>Message<wbr>Arrived<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Message</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L132">mesh.ts:132</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>uuid: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>event: <span class="tsd-signature-type">Message</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -460,7 +547,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/37eeff9/src/mesh.ts#L73">mesh.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/135087b/src/mesh.ts#L91">mesh.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -489,10 +576,7 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="deepstreamsignaling.html" class="tsd-kind-icon">Deepstream<wbr>Signaling</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="firebasesignaling.html" class="tsd-kind-icon">Firebase<wbr>Signaling</a>
+						<a href="localsignaling.html" class="tsd-kind-icon">Local<wbr>Signaling</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -536,6 +620,12 @@
 								<a href="mesh.html#close" class="tsd-kind-icon">close</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="mesh.html#connectioncount" class="tsd-kind-icon">connection<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="mesh.html#connectionsopened" class="tsd-kind-icon">connections<wbr>Opened</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="mesh.html#createanswer" class="tsd-kind-icon">create<wbr>Answer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -550,6 +640,12 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="mesh.html#sendmessage" class="tsd-kind-icon">send<wbr>Message</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="mesh.html#systemchannelopened" class="tsd-kind-icon">system<wbr>Channel<wbr>Opened</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="mesh.html#systemmessagearrived" class="tsd-kind-icon">system<wbr>Message<wbr>Arrived</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="mesh.html#verifyanswer" class="tsd-kind-icon">verify<wbr>Answer</a>
 							</li>
@@ -562,12 +658,6 @@
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="peerrecord.html" class="tsd-kind-icon">Peer<wbr>Record</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="../modules.html#generaterandomletters" class="tsd-kind-icon">generate<wbr>Random<wbr>Letters</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="../modules.html#uuidv4" class="tsd-kind-icon">uuidv4</a>
 					</li>
 				</ul>
 			</nav>

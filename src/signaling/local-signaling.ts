@@ -21,7 +21,7 @@ export class LocalSignaling extends BaseSignaling {
         // and can safely delete the info
         setTimeout(() => {
             localStorage.removeItem(this.roomId);
-            for (const [key, value] of this.pairRecordMap.entries()) {
+            for (const value of this.pairRecordMap.values()) {
                 localStorage.removeItem(value);
             }
         }, 5000);

@@ -100,11 +100,14 @@ export class Mesh {
     else throw new Error(`meshConnection ${uuid} not found`);
   }
 
+  // TO DO
+  /*
   private sendSysMessage(uuid: string, message: ArrayBuffer) {
     const conn = this.findConnection(uuid);
     if (conn) return conn.sendSys(message);
     else throw new Error(`meshConnection ${uuid} not found`);
   }
+  */
 
   public broadcastMessage(message: ArrayBuffer) {
     this.connections.forEach((conn) => {
@@ -112,17 +115,22 @@ export class Mesh {
     });
   }
 
+  // TO DO
+  /*
   private broadcastSysMessage(message: ArrayBuffer) {
     this.connections.forEach((conn) => {
       conn.sendSys(message);
     });
   }
-
+  */
+ 
   private systemChannelOpened(uuid: string) {
-
+    // TO DO
+    console.log(`systemChannelOpened(${uuid})`);
   }
 
   private systemMessageArrived(uuid: string, event: Message) {
-    
+    // TO DO
+    console.log(`systemMessageArrived(${uuid},${event})`);
   }
 }

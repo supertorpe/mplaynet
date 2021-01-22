@@ -18,8 +18,8 @@
     "clean": "rimraf ./dist",
     "build:types": "tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/mplaynet.d.ts src/mplaynet.ts",
     "build:js": "rollup -c rollup.config.js",
-    "build:minjs:umd": "terser dist/mplaynet.umd.js --compress --mangle > dist/mplaynet.umd.min.js",
-    "build:minjs:esm": "terser dist/mplaynet.esm.js --compress --mangle > dist/mplaynet.esm.min.js",
+    "build:minjs:umd": "terser dist/mplaynet.umd.js --compress --mangle > dist/mplaynet.umd.min.js && terser dist/mplaynet-firebase.umd.js --compress --mangle > dist/mplaynet-firebase.umd.min.js && terser dist/mplaynet-deepstream.umd.js --compress --mangle > dist/mplaynet-deepstream.umd.min.js",
+    "build:minjs:esm": "terser dist/mplaynet.esm.js --compress --mangle > dist/mplaynet.esm.min.js && terser dist/mplaynet-firebase.esm.js --compress --mangle > dist/mplaynet-firebase.esm.min.js && terser dist/mplaynet-deepstream.esm.js --compress --mangle > dist/mplaynet-deepstream.esm.min.js",
     "build:minjs": "npm run build:minjs:esm -s && npm run build:minjs:umd -s",
     "build": "npm run clean && npm run build:js -s && npm run build:minjs -s && npm run build:types -s"
   },
