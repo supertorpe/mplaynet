@@ -158,12 +158,18 @@ const startGame = (peers) => {
     players.push(player);
     if (peer.uuid == myUUID) {
       myPlayer = player;
+
+      const message = `broadcast greeting: hello, I am ${myUUID}!`;
+      const greeting = new TextEncoder().encode(message).buffer;
+      mesh.broadcastAndListen(greeting).forEach(promise => promise.then(reply => {
+        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my broadcast message "${message}"`);
+      }));
     } else {
       // send welcome message and wait for response
-      const message = `hello, I am ${myUUID}!`;
+      const message = `unicast greeting: hello, I am ${myUUID}!`;
       const greeting = new TextEncoder().encode(message).buffer;
       mesh.sendAndListen(peer.uuid, greeting).then(reply => {
-        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my message "${message}"`);
+        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my unicast message "${message}"`);
       });
     }
     drawPlayer(player);

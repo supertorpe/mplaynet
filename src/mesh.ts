@@ -129,6 +129,18 @@ export class Mesh {
     );
   }
 
+  public broadcastAndListen(message: ArrayBuffer): Promise<Message>[] {
+    return this._connections.map(conn => conn.sendAndListen(message));
+  }
+
+
+  private broadcastSys(message: ArrayBuffer) {
+    return this._connections.reduce(
+      (total, conn) => (conn.sendSys(message) ? ++total : total),
+      0
+    );
+  }
+
   private systemMessageArrived(uuid: string, event: Message) {
     // TO DO
     //console.log(`systemMessageArrived(${uuid},${event})`);

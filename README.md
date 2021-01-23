@@ -19,6 +19,7 @@ Features:
     - reply(uuid: string, originalMessage: Message, message: ArrayBuffer): boolean
     - replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message>
     - broadcast(message: ArrayBuffer)
+    - broadcastAndListen(message: ArrayBuffer): Promise<Message>[]
 - Automatically calculates latency and differences in internal clock timestamp between each pair of nodes
 - [TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them
 - [TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority
@@ -99,6 +100,12 @@ signaller.roomRecordEmitter.addEventListener((uuid, event) => {
 // broadcast a message to all peers
 const message = new ArrayBuffer(size);
 mesh.broadcast(message);
+
+// broadcast a message to all peers an listen for replies
+const greeting = new TextEncoder().encode('hello all!, I am Peter!').buffer;
+mesh.broadcastAndListen(greeting).forEach(promise => promise.then(reply => {
+  console.log(new TextDecoder().decode(reply.body));
+}));
 
 // send a message to a peer
 mesh.send(remotePeer.uuid, message);
