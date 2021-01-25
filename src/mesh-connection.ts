@@ -1,7 +1,7 @@
 import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
 import { Message, MESSAGE_REPLY, MESSAGE_REPLY_AND_LISTEN, MESSAGE_SEND, MESSAGE_SEND_AND_LISTEN,
-         SYSTEM_MESSAGE_PING } from './message';
+  SYSTEM_MESSAGE_PING, SYSTEM_MESSAGE_IM_READY } from './message';
 
 export class MeshConnection {
 
@@ -173,16 +173,18 @@ export class MeshConnection {
   }
 
   private emitConnectionIsReady() {
+    // ping at regular intervals to update latency and clock differences
     this.sendPing();
     // TO DO: check if this can be done in a webworker
     this._checkLatencyIntervalTimer = window.setInterval(() => { this.sendPing() }, this._checkLatencyInterval);
+    // notify connection is ready
     this._connectionReadyEmitter.notify(this._uuid, true);
   }
 
   private sendPing() {
-    const ping = new Uint8Array(1);
-    ping[0] = SYSTEM_MESSAGE_PING;
-    this.sendAndListenSys(ping.buffer).then(reply => {
+    const packet = new Uint8Array(1);
+    packet[0] = SYSTEM_MESSAGE_PING;
+    this.sendAndListenSys(packet.buffer).then(reply => {
       if (reply.sourceTimestamp) this.updateLatencyAndClockDiff(this.getLocalTimestamp(), reply.sourceTimestamp, reply.timestamp);
     });
   }
@@ -201,6 +203,7 @@ export class MeshConnection {
         // if PING, send reply
         if (data[0] === SYSTEM_MESSAGE_PING) {
           this.replySys(message, data.buffer);
+          return; // do not want to bubble up the ping event
         }
       }
     }

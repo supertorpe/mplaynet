@@ -17,6 +17,7 @@ export const MESSAGE_REPLY            = 3;
 export const MESSAGE_REPLY_AND_LISTEN = 4;
 
 export const SYSTEM_MESSAGE_PING      = 1;
+export const SYSTEM_MESSAGE_IM_READY  = 2;
 
 export class Message {
     private _timestamp: number;
