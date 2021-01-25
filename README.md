@@ -6,7 +6,7 @@ Typescript library to manage a mesh WebRTC network (pre-alpha)
 
 Features:
 
-- Encapsulates the management of multiple WebRTC connections
+- Manage multiple WebRTC connections
 - Provides multiple signaling mechanisms so you don't have to worry about the offer / answers / iceCandidates racking:
     - Signaling using Deepstream.io into a separate bundle
     - Signaling using firebase into a separate bundle

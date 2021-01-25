@@ -187,6 +187,7 @@ const startGame = (peers) => {
   });
 
   mesh.messageEmitter.addEventListener((uuid, message) => {
+    // handle welcome message
     if (message.awaitReply) {
       const messageReceived = new TextDecoder().decode(message.body);
       console.log(`received: ${messageReceived}`);
@@ -194,6 +195,7 @@ const startGame = (peers) => {
       mesh.reply(uuid, message, response);
       return;
     }
+    // handle 'move' message
     const move = new Int16Array(message.body);
     const player = players.find(player => player.uuid === uuid);
     if (player) {
@@ -256,11 +258,11 @@ const update = () => {
     let vertical;
     let horizontal;
     if (player.uuid == myPlayer.uuid) {
-      // calcular el desplazamiento vertical y horizontal en función de las teclas pulsadas
+      // calculate vertical and horizontal displacement based on keystrokes
       vertical = pressedKeys[38] ? -STEPSIZE : pressedKeys[40] ? STEPSIZE : 0;
       horizontal = pressedKeys[37] ? -STEPSIZE : pressedKeys[39] ? STEPSIZE : 0;
     } else {
-      // acercar a los otros jugadores a su posición real
+      // gently bring the other players closer to their actual position
       vertical =
         player.realTop < player.top
           ? Math.max(-STEPSIZE, player.realTop - player.top)
@@ -280,7 +282,7 @@ const update = () => {
 };
 
 const makeMove = (playerToMove, vertical, horizontal) => {
-  // comprobar que no nos salgamos del área del navegador
+  // check that we do not leave the playing area
   if (vertical < 0 && playerToMove.top + vertical < 0) {
     vertical = -playerToMove.top;
   }
@@ -301,7 +303,7 @@ const makeMove = (playerToMove, vertical, horizontal) => {
     horizontal =
       WIDTH /*document.body.clientWidth*/ - (playerToMove.left + SIZE);
   }
-  // si va a haber colisión, corregir el desplazamiento para evitarlo
+  // if there is going to be a collision, correct the displacement to avoid it
   players.forEach((playerNotToMove) => {
     if (playerNotToMove.uuid != playerToMove.uuid) {
       if (
@@ -350,8 +352,8 @@ const makeMove = (playerToMove, vertical, horizontal) => {
 
 const move = new Uint16Array(2);
 
-const sendMove = (force) => {
-  if (!force && move[0] == myPlayer.top && move[1] == myPlayer.left) return;
+const sendMove = () => {
+  if (move[0] == myPlayer.top && move[1] == myPlayer.left) return;
   move[0] = myPlayer.top;
   move[1] = myPlayer.left;
   if (LAG === 0) {

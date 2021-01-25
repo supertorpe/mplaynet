@@ -3,9 +3,6 @@
  *   - timestamp: 8 bytes
  *   - sequence: 2 bytes (0..65535)
  *   - type: 1 byte (1 - send ; 2 - sendAndListen ; 3 - reply ; 4 - replyAndListen)
- *   - if (type == 1 || type == 2)
- *     - source timestamp: 8 bytes
- *     - source sequence: 2 bytes
  *   - if (type == 3 || type == 4)
  *     - source timestamp: 8 bytes
  *     - source sequence: 2 bytes
