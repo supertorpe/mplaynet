@@ -154,6 +154,7 @@ const startGame = (peers) => {
       selector: `#player_${index}`,
       top: 10,
       left: 10 + (SIZE + 5) * index,
+      disconnected: false
     };
     players.push(player);
     if (peer.uuid == myUUID) {
@@ -177,9 +178,9 @@ const startGame = (peers) => {
 
   mesh.connectionReadyEmitter.addEventListener((uuid, ready) => {
     if (!ready) { // player disconnected
-      const player = players.find(player => player.uuid === uuid);
+      const player = players.find(player => player && player.uuid === uuid);
       if (player) {
-        players.splice(player.index, 1);
+        player.disconnected = true;
         const object = document.querySelector(player.selector);
         object.classList.add("disconnected");
       }
@@ -197,7 +198,7 @@ const startGame = (peers) => {
     }
     // handle 'move' message
     const move = new Int16Array(message.body);
-    const player = players.find(player => player.uuid === uuid);
+    const player = players.find(player => !player.disconnected && player.uuid === uuid);
     if (player) {
       player.realTop = move[0];
       player.realLeft = move[1];
@@ -219,7 +220,7 @@ const drawPlayer = (player) => {
 };
 
 const draw = () => {
-  players.forEach((player) => drawPlayer(player));
+  players.forEach((player) => !player.disconnected && drawPlayer(player));
 };
 
 const pressedKeys = {};
@@ -255,6 +256,9 @@ const checkCollision = (x1, y1, x2, y2, size) => {
 
 const update = () => {
   players.forEach((player) => {
+    if (player.disconnected) {
+      return;
+    }
     let vertical;
     let horizontal;
     if (player.uuid == myPlayer.uuid) {
@@ -305,7 +309,7 @@ const makeMove = (playerToMove, vertical, horizontal) => {
   }
   // if there is going to be a collision, correct the displacement to avoid it
   players.forEach((playerNotToMove) => {
-    if (playerNotToMove.uuid != playerToMove.uuid) {
+    if (!playerNotToMove.disconnected && playerNotToMove.uuid != playerToMove.uuid) {
       if (
         checkCollision(
           playerToMove.left + horizontal,
