@@ -20,7 +20,8 @@ Features:
     - replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message>
     - broadcast(message: ArrayBuffer)
     - broadcastAndListen(message: ArrayBuffer): Promise<Message>[]
-- Automatically calculates latency and differences in internal clock timestamp between each pair of nodes
+- Calculate latency between peers at regular intervals
+- Clock synchronization by [Cristian's algorithm](https://en.wikipedia.org/wiki/Cristian%27s_algorithm)
 - [TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them
 - [TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority
 

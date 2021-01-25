@@ -22,6 +22,7 @@ export class MeshConnection {
   // TO DO: config max cache size and/or max object age
   private _messagesAwaitingReply: Map<string, (message: Message | PromiseLike<Message>) => void> = new Map();
   private _latency: number = -1;
+  private _minLatency: number | undefined;
   private _clockDiff: number = -1;
   // TO DO: config checkLatencyInterval
   private _checkLatencyInterval: number = 5000;
@@ -165,11 +166,16 @@ export class MeshConnection {
     return +sResult + this.FAKE_TIME;
   }
 
+  // Cristian's algorithm (https://en.wikipedia.org/wiki/Cristian%27s_algorithm)
   private updateLatencyAndClockDiff(currentLocalTimestamp: number, previousLocalTimestamp: number, remoteTimestamp: number) {
     this._latency = currentLocalTimestamp - previousLocalTimestamp;
-    const lag = Math.round(this._latency / 2);
-    this._clockDiff = currentLocalTimestamp - lag - remoteTimestamp;
-    console.log(`latencty: ${this._latency}, clock diff=${this._clockDiff}`);
+    const updateClock = (!this._minLatency || this._latency <= this._minLatency);
+    if (updateClock) {
+      this._minLatency = this._latency;
+      const lag = Math.round(this._latency / 2);
+      this._clockDiff = currentLocalTimestamp - lag - remoteTimestamp;
+    }
+    console.log(`latency: ${this._latency}, clock diff=${this._clockDiff}`);
   }
 
   private emitConnectionIsReady() {
