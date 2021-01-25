@@ -169,7 +169,7 @@ export class MeshConnection {
     this._latency = currentLocalTimestamp - previousLocalTimestamp;
     const lag = Math.round(this._latency / 2);
     this._clockDiff = currentLocalTimestamp - lag - remoteTimestamp;
-    console.log(`lag: ${lag}, clock diff=${this._clockDiff}`);
+    console.log(`latencty: ${this._latency}, clock diff=${this._clockDiff}`);
   }
 
   private emitConnectionIsReady() {
@@ -182,7 +182,9 @@ export class MeshConnection {
   private sendPing() {
     const ping = new Uint8Array(1);
     ping[0] = SYSTEM_MESSAGE_PING;
-    this.sendAndListenSys(ping.buffer);
+    this.sendAndListenSys(ping.buffer).then(reply => {
+      if (reply.sourceTimestamp) this.updateLatencyAndClockDiff(this.getLocalTimestamp(), reply.sourceTimestamp, reply.timestamp);
+    });
   }
 
   private emitConnectionIsNotReady() {
@@ -205,7 +207,7 @@ export class MeshConnection {
     // if it is a reply, look for the original message in the message cache
     if (message.type === MESSAGE_REPLY || message.type === MESSAGE_REPLY_AND_LISTEN) {
       console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp}, sequence=${message.sequence}, sourceTimestamp=${message.sourceTimestamp}, sourceSequence=${message.sourceSequence}`);
-      if (message.sourceTimestamp) this.updateLatencyAndClockDiff(now, message.sourceTimestamp, message.timestamp);
+      
       const key = message.sourceKey;
       const sourceMessage = this._messagesAwaitingReply.get(key);
       if (sourceMessage) {
