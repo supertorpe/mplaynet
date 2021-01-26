@@ -27,6 +27,7 @@ export class Message {
     private _sourceSequence?: number;
     private _body: ArrayBuffer;
     private _fullMessage: ArrayBuffer;
+    private _clockDiff: number | undefined;
 
     public static parse(fullMessage: ArrayBuffer): Message {
         // extract headers and body from fullMessage
@@ -95,5 +96,8 @@ export class Message {
     get key(): string { return `${this._timestamp}:${this._sequence}`; }
     get sourceKey(): string { return `${this._sourceTimestamp}:${this._sourceSequence}`; }
     get awaitReply(): boolean { return (this._type === MESSAGE_SEND_AND_LISTEN || this._type === MESSAGE_REPLY_AND_LISTEN); }
+    get clockDiff(): number | undefined { return this._clockDiff; }
+    set clockDiff(value: number | undefined) { this._clockDiff = value; }
+    get timestampToLocalTime(): number | undefined { return this._clockDiff ? this._timestamp + this._clockDiff : undefined; }
 
 }

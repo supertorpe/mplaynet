@@ -21,9 +21,9 @@ export class MeshConnection {
   // TO DO: webworker to cleanup old messages
   // TO DO: config max cache size and/or max object age
   private _messagesAwaitingReply: Map<string, (message: Message | PromiseLike<Message>) => void> = new Map();
-  private _latency: number = -1;
+  private _latency: number | undefined;
   private _minLatency: number | undefined;
-  private _clockDiff: number = -1;
+  private _clockDiff: number | undefined;
   // TO DO: config checkLatencyInterval
   private _checkLatencyInterval: number = 5000;
   private _checkLatencyIntervalTimer: number | null = null;
@@ -113,10 +113,10 @@ export class MeshConnection {
     return this._channel && this._channel.readyState === 'open' &&
       this._systemChannel && this._systemChannel.readyState === 'open';
   }
-  get latency(): number {
+  get latency(): number | undefined {
     return this._latency;
   }
-  get clockDiff(): number {
+  get clockDiff(): number | undefined {
     return this._clockDiff;
   }
 
@@ -159,7 +159,7 @@ export class MeshConnection {
     10000 * (1 + Math.floor(Math.random() * 9)) + 
      1000 * (1 + Math.floor(Math.random() * 9)) + 
       100 * (1 + Math.floor(Math.random() * 9));
-*/
+//*/
 
   private getLocalTimestamp(): number {
     const sResult = new Date().valueOf().toString().substring(3);
@@ -213,9 +213,10 @@ export class MeshConnection {
         }
       }
     }
+    message.clockDiff = this._clockDiff;
     // if it is a reply, look for the original message in the message cache
     if (message.type === MESSAGE_REPLY || message.type === MESSAGE_REPLY_AND_LISTEN) {
-      console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp}, sequence=${message.sequence}, sourceTimestamp=${message.sourceTimestamp}, sourceSequence=${message.sourceSequence}`);
+      console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp} (toLocalTime=${message.timestampToLocalTime}), sequence=${message.sequence}, sourceTimestamp=${message.sourceTimestamp}, sourceSequence=${message.sourceSequence}`);
       
       const key = message.sourceKey;
       const sourceMessage = this._messagesAwaitingReply.get(key);
@@ -225,7 +226,7 @@ export class MeshConnection {
         return;
       }
     } else {
-      console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp}, sequence=${message.sequence}`);
+      console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp} (toLocalTime=${message.timestampToLocalTime}), sequence=${message.sequence}`);
     }
     emmiter.notify(this._uuid, message);
   }

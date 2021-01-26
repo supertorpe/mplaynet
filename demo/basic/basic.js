@@ -163,14 +163,14 @@ const startGame = (peers) => {
       const message = `broadcast greeting: hello, I am ${myUUID}!`;
       const greeting = new TextEncoder().encode(message).buffer;
       mesh.broadcastAndListen(greeting).forEach(promise => promise.then(reply => {
-        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my broadcast message "${message}"`);
+        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my broadcast message "${message}"  [remoteTimestamp=${reply.timestamp}, toLocalTime=${reply.timestampToLocalTime}]`);
       }));
     } else {
       // send welcome message and wait for response
       const message = `unicast greeting: hello, I am ${myUUID}!`;
       const greeting = new TextEncoder().encode(message).buffer;
       mesh.sendAndListen(peer.uuid, greeting).then(reply => {
-        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my unicast message "${message}"`);
+        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my unicast message "${message}"  [remoteTimestamp=${reply.timestamp}, toLocalTime=${reply.timestampToLocalTime}]`);
       });
     }
     drawPlayer(player);
@@ -191,7 +191,7 @@ const startGame = (peers) => {
     // handle welcome message
     if (message.awaitReply) {
       const messageReceived = new TextDecoder().decode(message.body);
-      console.log(`received: ${messageReceived}`);
+      console.log(`received: ${messageReceived} [remoteTimestamp=${message.timestamp}, toLocalTime=${message.timestampToLocalTime}]`);
       const response = new TextEncoder().encode('Nice to meet you').buffer;
       mesh.reply(uuid, message, response);
       return;
