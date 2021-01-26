@@ -44,18 +44,16 @@ export class FirebaseSignaling extends BaseSignaling {
     }
 
     protected internalHostRoom(roomId: string, username: string): Promise<boolean> {
-        return new Promise<boolean>((resolve) => {
-            const roomRecord = new RoomRecord(roomId, []);
-            this.roomRef = this.roomsCollectionRef.doc(roomId);
-            this.roomRef.set({ info: JSON.stringify(roomRecord) })
-                .then(() => {
-                    this.bindRoom(roomId, username).then(ok => resolve(ok));
-                })
-                .catch((error) => {
-                    console.log(error);
-                    resolve(false);
-                });
-        });
+        const roomRecord = new RoomRecord(roomId, []);
+        this.roomRef = this.roomsCollectionRef.doc(roomId);
+        return this.roomRef.set({ info: JSON.stringify(roomRecord) })
+            .then(() => {
+                return this.bindRoom(roomId, username);
+            })
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
     }
 
     protected internalJoinRoom(roomId: string, username: string): Promise<boolean> {
