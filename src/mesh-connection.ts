@@ -2,6 +2,7 @@ import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
 import { Message, MESSAGE_REPLY, MESSAGE_REPLY_AND_LISTEN, MESSAGE_SEND, MESSAGE_SEND_AND_LISTEN,
   SYSTEM_MESSAGE_PING } from './message';
+import { getLocalTimestamp } from './utils';
 
 export class MeshConnection {
 
@@ -29,8 +30,7 @@ export class MeshConnection {
   private _checkLatencyIntervalTimer: number | null = null;
 
   constructor(private config: MeshConfig, private _uuid: string) {
-    const fakeTimestamp = this.getLocalTimestamp();
-    console.log(`FAKE TIME: ${this.FAKE_TIME}, fake timestamp=${fakeTimestamp}, time=${fakeTimestamp - this.FAKE_TIME}`);
+    getLocalTimestamp();
     this._connectionReadyEmitter = new EventEmitter<boolean>();
     this._iceCandidateEmitter = new EventEmitter<RTCIceCandidate>();
     this._messageEmitter = new EventEmitter<Message>();
@@ -155,19 +155,6 @@ export class MeshConnection {
     return this._connection.setRemoteDescription(answer);
   }
 
-  private FAKE_TIME = // for local debugging
-    0;
-/*
-    10000 * (1 + Math.floor(Math.random() * 9)) + 
-     1000 * (1 + Math.floor(Math.random() * 9)) + 
-      100 * (1 + Math.floor(Math.random() * 9));
-//*/
-
-  private getLocalTimestamp(): number {
-    const sResult = new Date().valueOf().toString().substring(3);
-    return +sResult + this.FAKE_TIME;
-  }
-
   // Cristian's algorithm (https://en.wikipedia.org/wiki/Cristian%27s_algorithm)
   private updateLatencyAndClockDiff(currentLocalTimestamp: number, previousLocalTimestamp: number, remoteTimestamp: number) {
     this._latency = currentLocalTimestamp - previousLocalTimestamp;
@@ -199,7 +186,7 @@ export class MeshConnection {
     const packet = new Uint8Array(1);
     packet[0] = SYSTEM_MESSAGE_PING;
     this.sendAndListenSys(packet.buffer).then(reply => {
-      if (reply.sourceTimestamp) this.updateLatencyAndClockDiff(this.getLocalTimestamp(), reply.sourceTimestamp, reply.timestamp);
+      if (reply.sourceTimestamp) this.updateLatencyAndClockDiff(getLocalTimestamp(), reply.sourceTimestamp, reply.timestamp);
     });
   }
 
@@ -208,7 +195,7 @@ export class MeshConnection {
   }
 
   private cleanMessagesAwaitingReply() {
-    const time = this.getLocalTimestamp() - this.config.messagesAwaitingReplyMaxAge;
+    const time = getLocalTimestamp() - this.config.messagesAwaitingReplyMaxAge;
     for (let key of this._messagesAwaitingReply.keys()) {
       if (+key.split(':')[0] < time) {
         this._messagesAwaitingReply.delete(key);
@@ -230,7 +217,7 @@ export class MeshConnection {
   }
 
   private processReceivedMessage(emmiter: EventEmitter<Message>, message: Message, isSystemMessage: boolean) {
-    const now = this.getLocalTimestamp();
+    const now = getLocalTimestamp();
     // if it is a system message, process it accordingly
     if (isSystemMessage) {
       // check if the message requires reply
@@ -271,7 +258,7 @@ export class MeshConnection {
   }
 
   private sendByChannel(channel: RTCDataChannel, message: ArrayBuffer): boolean {
-    const timestamp = this.getLocalTimestamp();
+    const timestamp = getLocalTimestamp();
     const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_SEND);
     console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
     return this.internalSend(channel, theMessage.fullMessage);
@@ -279,7 +266,7 @@ export class MeshConnection {
 
   private sendAndListenBychannel(channel: RTCDataChannel, message: ArrayBuffer): Promise<Message> {
     return new Promise<Message>(resolve => {
-      const timestamp = this.getLocalTimestamp();
+      const timestamp = getLocalTimestamp();
       const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_SEND_AND_LISTEN);
       console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
       if (this.internalSend(channel, theMessage.fullMessage)) {
@@ -290,7 +277,7 @@ export class MeshConnection {
   }
 
   private replyByChannel(channel: RTCDataChannel, originalMessage: Message, message: ArrayBuffer): boolean {
-    const timestamp = this.getLocalTimestamp();
+    const timestamp = getLocalTimestamp();
     const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_REPLY, originalMessage.timestamp, originalMessage.sequence);
     console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
     return this.internalSend(channel, theMessage.fullMessage);
@@ -298,7 +285,7 @@ export class MeshConnection {
 
   private replyAndListenByChannel(channel: RTCDataChannel, originalMessage: Message, message: ArrayBuffer): Promise<Message> {
     return new Promise<Message>(resolve => {
-      const timestamp = this.getLocalTimestamp();
+      const timestamp = getLocalTimestamp();
       const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_REPLY_AND_LISTEN, originalMessage.timestamp, originalMessage.sequence);
       console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
       if (this.internalSend(channel, theMessage.fullMessage)) {
