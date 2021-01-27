@@ -121,6 +121,7 @@ mesh.sendAndListen(remotePeer.uuid, greeting).then(reply => {
 mesh.messageEmitter.addEventListener((uuid, message) => {
   // uuid of the remote peer
   // message.timestamp : remote timestamp
+  // message.timestampToLocalTime : remote timestamp converted to local time
   // message.sequence: message sequence
   // message.body: ArrayBuffer
   // message.type (1 - send ; 2 - sendAndListen ; 3 - reply ; 4 - replyAndListen)

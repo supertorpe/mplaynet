@@ -3,7 +3,6 @@ const {
   Mesh
 } = mplaynet;
 
-
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 generateRandomLetters = (length) => {
@@ -30,7 +29,11 @@ const meshConfig = new MeshConfig(
   },
   {
     ordered: false, maxRetransmits: 1
-  }
+  },
+  1000, // messagesAwaitingReplyMaxSize
+  10000, // messagesAwaitingReplyMaxAge
+  5000, // messagesAwaitingReplyCleanerInterval
+  5000 //checkLatencyInterval
 );
 
 const mesh = new Mesh(meshConfig, myUUID);

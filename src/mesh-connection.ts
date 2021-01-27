@@ -1,7 +1,7 @@
 import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
 import { Message, MESSAGE_REPLY, MESSAGE_REPLY_AND_LISTEN, MESSAGE_SEND, MESSAGE_SEND_AND_LISTEN,
-  SYSTEM_MESSAGE_PING, SYSTEM_MESSAGE_IM_READY } from './message';
+  SYSTEM_MESSAGE_PING } from './message';
 
 export class MeshConnection {
 
@@ -17,15 +17,15 @@ export class MeshConnection {
   private _messageEmitter: EventEmitter<Message>;
   private _systemMessageEmitter: EventEmitter<Message>;
   private _messageSeq = 1;
+  
   // cache with messages awaiting reply
-  // TO DO: webworker to cleanup old messages
-  // TO DO: config max cache size and/or max object age
   private _messagesAwaitingReply: Map<string, (message: Message | PromiseLike<Message>) => void> = new Map();
+  private _messagesAwaitingReplyCount: number = 0;
+  private _messagesAwaitingReplyCleanerTimer: number | null = null;
+
   private _latency: number | undefined;
   private _minLatency: number | undefined;
   private _clockDiff: number | undefined;
-  // TO DO: config checkLatencyInterval
-  private _checkLatencyInterval: number = 5000;
   private _checkLatencyIntervalTimer: number | null = null;
 
   constructor(private config: MeshConfig, private _uuid: string) {
@@ -49,7 +49,7 @@ export class MeshConnection {
       if (!this._connectionReady) {
         this._connectionReady = true;
       } else {
-        this.emitConnectionIsReady();
+        this.connectionReadyTasks();
       }
     };
     this._channel.onclose = () => {
@@ -63,7 +63,7 @@ export class MeshConnection {
       if (!this._connectionReady) {
         this._connectionReady = true;
       } else {
-        this.emitConnectionIsReady();
+        this.connectionReadyTasks();
       }
     };
     this._systemChannel.onclose = () => {
@@ -122,7 +122,9 @@ export class MeshConnection {
 
   public close() {
     if (this._checkLatencyIntervalTimer) window.clearInterval(this._checkLatencyIntervalTimer);
+    if (this._messagesAwaitingReplyCleanerTimer) window.clearInterval(this._messagesAwaitingReplyCleanerTimer);
     this._messagesAwaitingReply.clear();
+    this._messagesAwaitingReplyCount = 0;
     if (this._systemChannel) try { this._systemChannel.close(); } catch(err) { }
     if (this._channel) try { this._channel.close(); } catch(err) { }
     if (this._connection) try { this._connection.close(); } catch(err) { }
@@ -178,11 +180,17 @@ export class MeshConnection {
     console.log(`latency: ${this._latency}, clock diff=${this._clockDiff}`);
   }
 
-  private emitConnectionIsReady() {
+  private connectionReadyTasks() {
     // ping at regular intervals to update latency and clock differences
     this.sendPing();
     // TO DO: check if this can be done in a webworker
-    this._checkLatencyIntervalTimer = window.setInterval(() => { this.sendPing() }, this._checkLatencyInterval);
+    this._checkLatencyIntervalTimer = window.setInterval(() => { this.sendPing() }, this.config.checkLatencyInterval);
+
+    // launch timer to clean messages awaiting reply // TO DO: check if this can be done in a webworker
+    if (this.config.messagesAwaitingReplyMaxAge > 0) {
+      this._messagesAwaitingReplyCleanerTimer = window.setInterval(() => { this.cleanMessagesAwaitingReply(); }, this.config.messagesAwaitingReplyCleanerInterval);
+    }
+    
     // notify connection is ready
     this._connectionReadyEmitter.notify(this._uuid, true);
   }
@@ -197,6 +205,28 @@ export class MeshConnection {
 
   private emitConnectionIsNotReady() {
     this._connectionReadyEmitter.notify(this._uuid, false);
+  }
+
+  private cleanMessagesAwaitingReply() {
+    const time = this.getLocalTimestamp() - this.config.messagesAwaitingReplyMaxAge;
+    for (let key of this._messagesAwaitingReply.keys()) {
+      if (+key.split(':')[0] < time) {
+        this._messagesAwaitingReply.delete(key);
+        this._messagesAwaitingReplyCount--;
+      } else {
+        break;
+      }
+    }
+  }
+
+  private storeMessagesAwaitingReply(key: string, value: (message: Message | PromiseLike<Message>) => void) {
+    this._messagesAwaitingReply.set(key, value);
+    if (this.config.messagesAwaitingReplyMaxSize > 0 && this._messagesAwaitingReplyCount >= this.config.messagesAwaitingReplyMaxSize) {
+      // remove first element
+      this._messagesAwaitingReply.delete(this._messagesAwaitingReply.entries().next().value[0]);
+    } else {
+      this._messagesAwaitingReplyCount++;
+    }
   }
 
   private processReceivedMessage(emmiter: EventEmitter<Message>, message: Message, isSystemMessage: boolean) {
@@ -222,6 +252,7 @@ export class MeshConnection {
       const sourceMessage = this._messagesAwaitingReply.get(key);
       if (sourceMessage) {
         this._messagesAwaitingReply.delete(key);
+        this._messagesAwaitingReplyCount--;
         sourceMessage(message);
         return;
       }
@@ -253,7 +284,7 @@ export class MeshConnection {
       console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
       if (this.internalSend(channel, theMessage.fullMessage)) {
         // CAUTION: unlikely race condition if reply arrives before message is cached
-        this._messagesAwaitingReply.set(theMessage.key, resolve);
+        this.storeMessagesAwaitingReply(theMessage.key, resolve);
       }
     });
   }
@@ -272,7 +303,7 @@ export class MeshConnection {
       console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
       if (this.internalSend(channel, theMessage.fullMessage)) {
         // CAUTION: unlikely race condition if reply arrives before message is cached
-        this._messagesAwaitingReply.set(theMessage.key, resolve);
+        this.storeMessagesAwaitingReply(theMessage.key, resolve);
       }
     });
   }

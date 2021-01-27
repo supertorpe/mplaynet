@@ -33,8 +33,15 @@ interface RTCDataChannelInit {
     id?: number;
 }
 */
-    private _rtcDataChannelInit: RTCDataChannelInit
-
+    private _rtcDataChannelInit: RTCDataChannelInit,
+    /* Max number of messages awaiting reply, or 0 for infinite */
+    private _messagesAwaitingReplyMaxSize: number,
+    /* Max age for messages awaiting reply, or 0 so they do not expire */
+    private _messagesAwaitingReplyMaxAge: number,
+    /* Interval (milliseconds) for cleaning the buffer of messages awaiting reply */
+    private _messagesAwaitingReplyCleanerInterval: number,
+    /* Interval (milliseconds) to calculate latency and synchronize clocks */
+    private _checkLatencyInterval: number
   ) {}
 
   get rtcConfig(): RTCConfiguration {
@@ -42,5 +49,17 @@ interface RTCDataChannelInit {
   }
   get rtcDataChannelInit(): RTCDataChannelInit {
     return this._rtcDataChannelInit;
+  }
+  get messagesAwaitingReplyMaxSize(): number {
+    return this._messagesAwaitingReplyMaxSize;
+  }
+  get messagesAwaitingReplyMaxAge(): number {
+    return this._messagesAwaitingReplyMaxAge;
+  }
+  get messagesAwaitingReplyCleanerInterval(): number {
+    return this._messagesAwaitingReplyCleanerInterval;
+  }
+  get checkLatencyInterval(): number {
+    return this._checkLatencyInterval;
   }
 }
