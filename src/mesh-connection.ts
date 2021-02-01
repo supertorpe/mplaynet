@@ -74,6 +74,7 @@ export class MeshConnection {
       }
     };
     this._connection.ondatachannel = (ev) => {
+      ev.channel.binaryType = "arraybuffer";
       switch(ev.channel.label) {
         case MeshConnection.SYSTEM_CHANNEL_LABEL:
           ev.channel.onmessage = (evm) => {
