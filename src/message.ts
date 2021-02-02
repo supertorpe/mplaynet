@@ -9,6 +9,9 @@
  * 
  * SYSTEM MESSAGES
  *   - body = [1] => ping
+ * 
+ * 
+ * https://javascript.info/arraybuffer-binary-arrays
  *************************************/
 
 export const MESSAGE_SEND             = 1;
@@ -38,19 +41,19 @@ export class Message {
             sourceSequence: number,
             body: ArrayBuffer;
         // timestamp
-        timestamp = new DataView(fullMessage).getInt32(0);
+        timestamp = Number(new DataView(fullMessage).getBigInt64(0));
         // sequence
-        sequence = new DataView(fullMessage, 4).getInt16(0);
+        sequence = new DataView(fullMessage, 8).getInt16(0);
         // type
-        type = new DataView(fullMessage, 6).getInt8(0);
+        type = new DataView(fullMessage, 10).getInt8(0);
         const isReply = (type === MESSAGE_REPLY || type === MESSAGE_REPLY_AND_LISTEN);
         // body
-        body = fullMessage.slice(!isReply ? 7 : 13);
+        body = fullMessage.slice(!isReply ? 11 : 17);
         if(isReply) {
             // - sourceTimestamp
-            sourceTimestamp = new DataView(fullMessage, 7).getInt32(0);
+            sourceTimestamp = Number(new DataView(fullMessage, 11).getBigInt64(0));
             // - sourceSequence
-            sourceSequence = new DataView(fullMessage, 11).getInt16(0);
+            sourceSequence = new DataView(fullMessage, 19).getInt16(0);
             return new Message(body, timestamp, sequence, type, sourceTimestamp, sourceSequence);
         } else {
             return new Message(body, timestamp, sequence, type);
@@ -66,24 +69,24 @@ export class Message {
         this._body = body;
         const isReply = (type === MESSAGE_REPLY || type === MESSAGE_REPLY_AND_LISTEN);
         // build full message
-        this._fullMessage = new ArrayBuffer((!isReply ? 7 : 13) + this._body.byteLength);
+        this._fullMessage = new ArrayBuffer((!isReply ? 11 : 21) + this._body.byteLength);
         // set header
         // - timestamp
-        new DataView(this._fullMessage).setInt32(0, this._timestamp);
+        new DataView(this._fullMessage).setBigInt64(0, BigInt(this._timestamp));
         // - sequence
-        new DataView(this._fullMessage, 4).setInt16(0, this._sequence);
+        new DataView(this._fullMessage, 8).setInt16(0, this._sequence);
         // - type
-        new DataView(this._fullMessage, 6).setInt8(0, this._type);
+        new DataView(this._fullMessage, 10).setInt8(0, this._type);
         if (isReply) {
             this._sourceTimestamp = sourceTimestamp;
             // - sourceTimestamp
-            if (this._sourceTimestamp) new DataView(this._fullMessage, 7).setInt32(0, this._sourceTimestamp);
+            if (this._sourceTimestamp) new DataView(this._fullMessage, 11).setBigInt64(0, BigInt(this._sourceTimestamp));
             // - sequence
             this._sourceSequence = _sourceSequence;
-            if (this._sourceSequence) new DataView(this._fullMessage, 11).setInt16(0, this._sourceSequence);
+            if (this._sourceSequence) new DataView(this._fullMessage, 19).setInt16(0, this._sourceSequence);
         }
         // set body
-        new Uint8Array(this._fullMessage).set(new Uint8Array(this._body), !isReply ? 7 : 13);
+        new Uint8Array(this._fullMessage).set(new Uint8Array(this._body), !isReply ? 11 : 21);
     }
 
     get timestamp(): number { return this._timestamp; }

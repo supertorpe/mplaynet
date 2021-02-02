@@ -7,18 +7,17 @@ export function uuidv4() {
 }
 
 const FAKE_TIME = // for local debugging
-  //0;
-  //*
+  0;
+/*
   10000 * (1 + Math.floor(Math.random() * 9)) + 
   1000 * (1 + Math.floor(Math.random() * 9)) + 
     100 * (1 + Math.floor(Math.random() * 9));
-  //*/
+//*/
 export function getLocalTimestamp(): number {
-  const sResult = new Date().valueOf().toString().substring(3);
-  return +sResult + FAKE_TIME;
+  return new Date().valueOf() + FAKE_TIME;
 }
 
-// for debug purposes
+// for debugging purposes
 const fakeTimestamp = getLocalTimestamp();
 console.log(`FAKE TIME: ${FAKE_TIME}, fake timestamp=${fakeTimestamp}, time=${fakeTimestamp - FAKE_TIME}`);
    
