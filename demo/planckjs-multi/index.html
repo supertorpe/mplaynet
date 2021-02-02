@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mplaynet demo - localstorage</title>
+    <link rel="stylesheet" href="game.css" />
+    <script src="../../dist/mplaynet.umd.js" defer></script>
+    <script src="./basic-localstorage.js" defer></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.52.0/dist/phaser.js" defer></script>
+    <!--<script src="//cdn.jsdelivr.net/npm/planck-js@0.3.23/dist/planck.min.js" defer></script>-->
+    <script src="./planck.min.js" defer></script>
+    <!--<script src="https://unpkg.com/flatted@3.1.1/min.js" defer></script>-->
+    <script src="./MersenneTwister19937class.js" defer></script>
+    <script src="./scene.js" defer></script>
+    <script src="./pairing.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="firstStep card">
+        <button id="btnHostGame">HOST</button>
+        <button id="btnJoinGame">JOIN</button>
+      </div>
+      <div class="hostGame card">
+        <input type="text" id="inputHostUsername" placeholder="Username" />
+        <button id="btnHost">HOST GAME</button>
+      </div>
+      <div class="joinGame card">
+        <h2>JOIN A GAME</h2>
+        <input type="text" id="inputRoomCode" placeholder="Room Code" />
+        <input type="text" id="inputJoinUsername" placeholder="Username" />
+        <button id="btnJoin">JOIN</button>
+      </div>
+      <div class="waiting card">
+        <h1>Room Code: <span id="roomCodeLabel"></span></h1>
+        <h2>
+          To join, have your friends navigate to this page, and use the code to
+          join!
+        </h2>
+        <p>Game will start when all players are ready</p>
+        <p>
+          Players: <span id="numPlayersLabel">1</span>, Ready:
+          <span id="numPlayersReadyLabel"></span>
+        </p>
+        <button id="btnReady">READY</button>
+      </div>
+      <div id="game-container" class="gameArea card"></div>
+    </div>
+  </body>
+</html>
