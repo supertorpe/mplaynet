@@ -48,7 +48,7 @@ export class Message {
         type = new DataView(fullMessage, 10).getInt8(0);
         const isReply = (type === MESSAGE_REPLY || type === MESSAGE_REPLY_AND_LISTEN);
         // body
-        body = fullMessage.slice(!isReply ? 11 : 17);
+        body = fullMessage.slice(!isReply ? 11 : 21);
         if(isReply) {
             // - sourceTimestamp
             sourceTimestamp = Number(new DataView(fullMessage, 11).getBigInt64(0));
@@ -101,6 +101,6 @@ export class Message {
     get awaitReply(): boolean { return (this._type === MESSAGE_SEND_AND_LISTEN || this._type === MESSAGE_REPLY_AND_LISTEN); }
     get clockDiff(): number | undefined { return this._clockDiff; }
     set clockDiff(value: number | undefined) { this._clockDiff = value; }
-    get timestampToLocalTime(): number | undefined { return this._clockDiff ? this._timestamp + this._clockDiff : undefined; }
+    get timestampToLocalTime(): number | undefined { return this._clockDiff !== undefined ? this._timestamp + this._clockDiff : undefined; }
 
 }
