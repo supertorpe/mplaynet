@@ -1,3 +1,11 @@
+let MPLAYNET_DEBUG = false;
+
+export {MPLAYNET_DEBUG};
+
+export function setDebug(value: boolean) {
+  MPLAYNET_DEBUG = value;
+}
+
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     let r = (Math.random() * 16) | 0,
@@ -18,6 +26,7 @@ export function getLocalTimestamp(): number {
 }
 
 // for debugging purposes
-const fakeTimestamp = getLocalTimestamp();
-console.log(`FAKE TIME: ${FAKE_TIME}, fake timestamp=${fakeTimestamp}, time=${fakeTimestamp - FAKE_TIME}`);
-   
+if (MPLAYNET_DEBUG) {
+  const fakeTimestamp = getLocalTimestamp();
+  console.log(`FAKE TIME: ${FAKE_TIME}, fake timestamp=${fakeTimestamp}, time=${fakeTimestamp - FAKE_TIME}`);
+}

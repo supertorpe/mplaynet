@@ -1,6 +1,6 @@
 import { EventEmitter } from "../event-emitter";
 import { Mesh } from "../mesh";
-import { uuidv4 } from "../utils";
+import { MPLAYNET_DEBUG, uuidv4 } from "../utils";
 import { PairingItem, PairingRecord, PeerRecord, RoomRecord } from "./records";
 
 export abstract class BaseSignaling {
@@ -81,7 +81,7 @@ export abstract class BaseSignaling {
                 }
                 const connectionCount = mesh.connectionCount();
                 const connectionsOpened = mesh.connectionsOpened();
-                console.log(`opened ${connectionsOpened} of ${connectionCount} connections`);
+                if (MPLAYNET_DEBUG) console.log(`opened ${connectionsOpened} of ${connectionCount} connections`);
                 if (connectionsOpened === connectionCount) {
                     pairing = false;
                 }
@@ -89,7 +89,7 @@ export abstract class BaseSignaling {
             mesh.iceCandidateEmitter.addEventListener((uuid, candidate) => {
                 let sCandidate = JSON.stringify(candidate);
                 if (!candidate.candidate) return;
-                console.log('candidate: ' + sCandidate);
+                if (MPLAYNET_DEBUG) console.log(`candidate: ${sCandidate}`);
                 this.saveIceCandidate(uuid, sCandidate);
             });
             if (this.roomRecord) {
@@ -110,7 +110,7 @@ export abstract class BaseSignaling {
                 mesh.createConnection(peer.uuid);
                 setTimeout(() => { // HACK
                     mesh.createOffer(peer.uuid).then((offer) => {
-                        console.log('create offer');
+                        if (MPLAYNET_DEBUG) console.log('create offer');
                         info = new PairingRecord(
                             1,
                             this._uuid,
@@ -140,7 +140,7 @@ export abstract class BaseSignaling {
                 mesh
                     .createAnswer(peer.uuid, JSON.parse(info.offer))
                     .then((answer) => {
-                        console.log('create answer');
+                        if (MPLAYNET_DEBUG) console.log('create answer');
                         info.answer = JSON.stringify(answer);
                         this.savePairingRecord(info, peer.uuid);
                     });
@@ -150,7 +150,7 @@ export abstract class BaseSignaling {
                 info.answer &&
                 !pairingItem.answerVerified
             ) {
-                console.log('verify answer');
+                if (MPLAYNET_DEBUG) console.log('verify answer');
                 pairingItem.answerVerified = true;
                 mesh.verifyAnswer(peer.uuid, JSON.parse(info.answer));
             }
@@ -168,7 +168,7 @@ export abstract class BaseSignaling {
                     pairingItem.iceCandidatesDone.push(candidate);
                     const iceCandidate: RTCIceCandidateInit = JSON.parse(candidate);
                     if (iceCandidate.candidate) {
-                        console.log('add candidate: ' + candidate);
+                        if (MPLAYNET_DEBUG) console.log(`add candidate: ${candidate}`);
                         mesh.addIceCandidate(peer.uuid, iceCandidate);
                     }
                     

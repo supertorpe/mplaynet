@@ -2,6 +2,7 @@ import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
 import { MeshConnection } from './mesh-connection';
 import { Message, SYSTEM_MESSAGE_IM_READY } from './message';
+import { MPLAYNET_DEBUG } from './utils';
 
 export class Mesh {
   private _connections: MeshConnection[] = [];
@@ -36,7 +37,7 @@ export class Mesh {
   }
 
   public createConnection(uuid: string) {
-    console.log('createConnection ' + uuid);
+    if (MPLAYNET_DEBUG) console.log(`createConnection ${uuid}`);
     const connection = new MeshConnection(this.config, uuid);
     connection.connectionReadyEmitter.addEventListener((uuid, ready) => {
       if (!ready) {
@@ -48,7 +49,7 @@ export class Mesh {
       } else {
         // If I have already established a connection with all the peers, notify them that I am ready
         if (this.connectionCount() === this.connectionsOpened()) {
-          console.log('I am ready!!!!!!!!!');
+          if (MPLAYNET_DEBUG) console.log('I am ready!!!!!!!!!');
           const packet = new Uint8Array(1);
           packet[0] = SYSTEM_MESSAGE_IM_READY;
           this.broadcastSys(packet.buffer);
@@ -158,9 +159,9 @@ export class Mesh {
   private systemMessageArrived(uuid: string, message: Message) {
     const data = new Int8Array(message.body);
     if (data[0] === SYSTEM_MESSAGE_IM_READY) {
-      console.log(`${uuid} is ready!!!!!!!`);
+      if (MPLAYNET_DEBUG) console.log(`${uuid} is ready!!!!!!!`);
       if (++this._peerReadyCount >= this._connections.length) {
-        console.log('All peers are ready!!!!!!!!!!');
+        if (MPLAYNET_DEBUG) console.log('All peers are ready!!!!!!!!!!');
         this._meshReadyEmitter.notify(this._uuid, true);
       }
     }

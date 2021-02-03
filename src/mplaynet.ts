@@ -3,7 +3,7 @@ import { MeshConfig } from './mesh-config';
 import { LocalSignaling } from './signaling/local-signaling';
 import { PeerRecord } from './signaling/records';
 import { Message} from './message';
-import { getLocalTimestamp } from './utils';
+import { getLocalTimestamp, setDebug } from './utils';
 
 export {
   Mesh,
@@ -11,5 +11,6 @@ export {
   PeerRecord,
   LocalSignaling,
   Message,
-  getLocalTimestamp
+  getLocalTimestamp,
+  setDebug
 };

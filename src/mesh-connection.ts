@@ -2,7 +2,7 @@ import { EventEmitter } from './event-emitter';
 import { MeshConfig } from './mesh-config';
 import { Message, MESSAGE_REPLY, MESSAGE_REPLY_AND_LISTEN, MESSAGE_SEND, MESSAGE_SEND_AND_LISTEN,
   SYSTEM_MESSAGE_PING } from './message';
-import { getLocalTimestamp } from './utils';
+import { getLocalTimestamp, MPLAYNET_DEBUG } from './utils';
 
 export class MeshConnection {
 
@@ -165,7 +165,7 @@ export class MeshConnection {
       const lag = Math.round(this._latency / 2);
       this._clockDiff = currentLocalTimestamp - lag - remoteTimestamp;
     }
-    console.log(`latency: ${this._latency}, clock diff=${this._clockDiff}`);
+    if (MPLAYNET_DEBUG) console.log(`latency: ${this._latency}, clock diff=${this._clockDiff}`);
   }
 
   private connectionReadyTasks() {
@@ -234,7 +234,7 @@ export class MeshConnection {
     message.clockDiff = this._clockDiff;
     // if it is a reply, look for the original message in the message cache
     if (message.type === MESSAGE_REPLY || message.type === MESSAGE_REPLY_AND_LISTEN) {
-      console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp} (toLocalTime=${message.timestampToLocalTime}), sequence=${message.sequence}, sourceTimestamp=${message.sourceTimestamp}, sourceSequence=${message.sourceSequence}`);
+      if (MPLAYNET_DEBUG) (`message received at localTimestamp ${now}: timestamp=${message.timestamp} (toLocalTime=${message.timestampToLocalTime}), sequence=${message.sequence}, sourceTimestamp=${message.sourceTimestamp}, sourceSequence=${message.sourceSequence}`);
       
       const key = message.sourceKey;
       const sourceMessage = this._messagesAwaitingReply.get(key);
@@ -245,7 +245,7 @@ export class MeshConnection {
         return;
       }
     } else {
-      console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp} (toLocalTime=${message.timestampToLocalTime}), sequence=${message.sequence}`);
+      if (MPLAYNET_DEBUG) console.log(`message received at localTimestamp ${now}: timestamp=${message.timestamp} (toLocalTime=${message.timestampToLocalTime}), sequence=${message.sequence}`);
     }
     emmiter.notify(this._uuid, message);
   }
@@ -261,7 +261,7 @@ export class MeshConnection {
   private sendByChannel(channel: RTCDataChannel, message: ArrayBuffer): boolean {
     const timestamp = getLocalTimestamp();
     const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_SEND);
-    console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
+    if (MPLAYNET_DEBUG) console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
     return this.internalSend(channel, theMessage.fullMessage);
   }
 
@@ -269,7 +269,7 @@ export class MeshConnection {
     return new Promise<Message>(resolve => {
       const timestamp = getLocalTimestamp();
       const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_SEND_AND_LISTEN);
-      console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
+      if (MPLAYNET_DEBUG) console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}`);
       if (this.internalSend(channel, theMessage.fullMessage)) {
         // CAUTION: unlikely race condition if reply arrives before message is cached
         this.storeMessagesAwaitingReply(theMessage.key, resolve);
@@ -280,7 +280,7 @@ export class MeshConnection {
   private replyByChannel(channel: RTCDataChannel, originalMessage: Message, message: ArrayBuffer): boolean {
     const timestamp = getLocalTimestamp();
     const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_REPLY, originalMessage.timestamp, originalMessage.sequence);
-    console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
+    if (MPLAYNET_DEBUG) console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
     return this.internalSend(channel, theMessage.fullMessage);
   }
 
@@ -288,7 +288,7 @@ export class MeshConnection {
     return new Promise<Message>(resolve => {
       const timestamp = getLocalTimestamp();
       const theMessage = new Message(message, timestamp, this._messageSeq++, MESSAGE_REPLY_AND_LISTEN, originalMessage.timestamp, originalMessage.sequence);
-      console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
+      if (MPLAYNET_DEBUG) console.log(`sending timestamp=${theMessage.timestamp}, sequence=${theMessage.sequence}, sourceTimestamp=${originalMessage.timestamp}, sourceSequence=${originalMessage.sequence}`);
       if (this.internalSend(channel, theMessage.fullMessage)) {
         // CAUTION: unlikely race condition if reply arrives before message is cached
         this.storeMessagesAwaitingReply(theMessage.key, resolve);
