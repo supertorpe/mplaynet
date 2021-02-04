@@ -14,6 +14,7 @@ export class MeshConnection {
   private _systemChannel: RTCDataChannel;
   private _connectionReady = false;
   private _connectionReadyEmitter: EventEmitter<boolean>;
+  private _connectionNotReadyNotified = false;
   private _iceCandidateEmitter: EventEmitter<RTCIceCandidate>;
   private _messageEmitter: EventEmitter<Message>;
   private _systemMessageEmitter: EventEmitter<Message>;
@@ -40,9 +41,12 @@ export class MeshConnection {
       if (event.candidate)
         this.iceCandidateEmitter.notify(this._uuid, event.candidate);
     };
-    //this._connection.onconnectionstatechange = () => {
-    //  console.log(`connectionState?${this._connection.connectionState}`);
-    //};
+    this._connection.onconnectionstatechange = () => {
+      if ('disconnected' === this._connection.connectionState) {
+        this._connectionReady = false;
+        this.emitConnectionIsNotReady();
+      }
+    };
     this._systemChannel = this._connection.createDataChannel(MeshConnection.SYSTEM_CHANNEL_LABEL, { ordered: true } );
     this._channel = this._connection.createDataChannel(MeshConnection.APP_CHANNEL_LABEL, this.config.rtcDataChannelInit);
     this._channel.onopen = () => {
@@ -53,11 +57,8 @@ export class MeshConnection {
       }
     };
     this._channel.onclose = () => {
-      if (this._connectionReady) {
-        this._connectionReady = false;
-      } else {
-        this.emitConnectionIsNotReady();
-      }
+      this._connectionReady = false;
+      this.emitConnectionIsNotReady();
     };
     this._systemChannel.onopen = () => {
       if (!this._connectionReady) {
@@ -67,11 +68,8 @@ export class MeshConnection {
       }
     };
     this._systemChannel.onclose = () => {
-      if (this._connectionReady) {
-        this._connectionReady = false;
-      } else {
-        this.emitConnectionIsNotReady();
-      }
+      this._connectionReady = false;
+      this.emitConnectionIsNotReady();
     };
     this._connection.ondatachannel = (ev) => {
       ev.channel.binaryType = "arraybuffer";
@@ -192,6 +190,8 @@ export class MeshConnection {
   }
 
   private emitConnectionIsNotReady() {
+    if (this._connectionNotReadyNotified) return;
+    this._connectionNotReadyNotified = true;
     this._connectionReadyEmitter.notify(this._uuid, false);
   }
 
