@@ -1,15 +1,16 @@
 const { getLocalTimestamp } = mplaynet;
 
+const DEBUG = false;
 const STRENGTH = 40;
 const TIMESLICE = 100;
 const RENDER_DELAY = 2;
 const WORLD_SCALE = 30; // Box2D works with meters. We need to convert meters to pixels. let's say 30 pixels = 1 meter.
-const LAG_SIMULATION = 20;
+const LAG_SIMULATION = 0;
 
 class MainScene extends Phaser.Scene {
     constructor(peers, mesh, timeToStart) {
         super("mainScene");
-        console.log(`getLocalTimestamp=${getLocalTimestamp()}`);
+        if (DEBUG) console.log(`getLocalTimestamp=${getLocalTimestamp()}`);
         this.ramdomGenerator = new MersenneTwister19937();
         this.ramdomGenerator.init_genrand(123456);
         this.encoder = new TextEncoder();
@@ -75,7 +76,7 @@ class MainScene extends Phaser.Scene {
         // wait to timeToStart
         if (!this.running && timestamp >= this.timeToStart) {
             this.running = true;
-            console.log("running!!!");
+            if (DEBUG) console.log("running!!!");
             this.waitingText.setText("");
         }
         if (!this.running) {
@@ -108,9 +109,10 @@ class MainScene extends Phaser.Scene {
                 }
             } else {
                 // there are gaps in the history, request a full history from another peer
-                console.log(
-                    "************* WARNING GAPS IN GAMESTATE HISTORY !!!!!!!!!!!!!!"
-                );
+                if (DEBUG)
+                    console.log(
+                        "************* WARNING GAPS IN GAMESTATE HISTORY !!!!!!!!!!!!!!"
+                    );
                 for (let peer of this.peers) {
                     if (peer.uuid !== myUUID) {
                         // request game history
@@ -145,10 +147,11 @@ class MainScene extends Phaser.Scene {
             command[2] = commandValue;
             command[3] = this.latestGameState.slice;
             this.latestGameState.commands[this.myIndex] = command;
-            console.log(
-                `send command: ${command[2]}, slice=${command[3]}. total=${++this
-                    .messagesSent}`
-            );
+            if (DEBUG)
+                console.log(
+                    `send command: ${command[2]}, slice=${command[3]}. total=${++this
+                        .messagesSent}`
+                );
             if (LAG_SIMULATION) {
                 setTimeout(() => {
                     this.mesh.broadcast(command.buffer);
@@ -172,7 +175,7 @@ class MainScene extends Phaser.Scene {
         for (let [index, body] of gameState.bodies.entries()) {
             const phaserObject = body.getUserData();
             if (phaserObject) {
-                if (timeDiff && phaserObject.name !== 'coin') {
+                if (timeDiff && phaserObject.name !== "coin") {
                     this.interpolate(
                         timeDiff,
                         phaserObject,
@@ -304,6 +307,7 @@ class MainScene extends Phaser.Scene {
     }
 
     debugGameState(gameState) {
+        if (!DEBUG) return;
         let log = `gameState ${gameState.slice}\n  bodies\n`;
         gameState.bodies.forEach((body) => {
             if (body.getUserData())
@@ -350,7 +354,7 @@ class MainScene extends Phaser.Scene {
             result.bodies = [];
             result.scores = [...gameState.scores];
             result.ramdomPointer = gameState.ramdomPointer;
-            result.coinCollected =  undefined;
+            result.coinCollected = undefined;
             // preserve previous commands
         } else {
             //this.debugGameState(gameState);
@@ -406,7 +410,7 @@ class MainScene extends Phaser.Scene {
         });
 
         this.computePhysics(result.world, result.bodies, gameState.commands);
-        
+
         return result;
     }
 
@@ -435,29 +439,34 @@ class MainScene extends Phaser.Scene {
     }
 
     rewriteHistory(gameState) {
-        console.group(`rewriteHistory from gameState ${gameState.slice}`);
+        if (DEBUG)
+            console.group(`rewriteHistory from gameState ${gameState.slice}`);
         this.debugGameState(gameState);
         let index = this.gameHistory.findIndex(
             (gs) => gs.slice === gameState.slice
         );
         let slice = gameState.slice;
         while (index >= 0 && index < this.gameHistory.length - 1) {
-            console.log(`rewriting gameState ${++slice}`);
-            const gameStateNext = this.nextGameState(this.gameHistory[index], this.gameHistory[index + 1]);
+            if (DEBUG) console.log(`rewriting gameState ${++slice}`);
+            const gameStateNext = this.nextGameState(
+                this.gameHistory[index],
+                this.gameHistory[index + 1]
+            );
             this.debugGameState(gameStateNext);
             index++;
         }
-        console.groupEnd();
+        if (DEBUG) console.groupEnd();
     }
 
     messageReceived(uuid, message) {
         const netcommand = new Int16Array(message.body);
         switch (netcommand[0]) {
             case 0: // player keystroke
-                console.log(
-                    `message from ${uuid}: command: ${netcommand[2]}, slice=${netcommand[3]
-                    }. total=${++this.messagesReceived}`
-                );
+                if (DEBUG)
+                    console.log(
+                        `message from ${uuid}: command: ${netcommand[2]}, slice=${netcommand[3]
+                        }. total=${++this.messagesReceived}`
+                    );
                 this.commandBuffer.push({
                     slice: netcommand[3],
                     command: netcommand
