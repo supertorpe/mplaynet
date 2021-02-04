@@ -4,8 +4,6 @@ Typescript library to manage a mesh WebRTC network (pre-alpha)
 
 ## Features
 
-Features:
-
 - Manage multiple WebRTC connections
 - Provides multiple signaling mechanisms so you don't have to worry about the offer / answers / iceCandidates racking:
     - Signaling using Deepstream.io into a separate bundle
@@ -151,3 +149,4 @@ mesh.connectionReadyEmitter.addEventListener((uuid, ready) => {
 ### Demos
 
 - [Simple game in which you create or enter a room with other players.](https://0khp9.csb.app)
+- [Phaser + Planck.js multiplayer demo](https://ix5w5.csb.app/test-planck-multi.html)
