@@ -65,9 +65,8 @@
 				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
 					<h2>Features</h2>
 				</a>
-				<p>Features:</p>
 				<ul>
-					<li>Encapsulates the management of multiple WebRTC connections</li>
+					<li>Manage multiple WebRTC connections</li>
 					<li>Provides multiple signaling mechanisms so you don&#39;t have to worry about the offer / answers / iceCandidates racking:<ul>
 							<li>Signaling using Deepstream.io into a separate bundle</li>
 							<li>Signaling using firebase into a separate bundle</li>
@@ -82,9 +81,11 @@
 							<li>reply(uuid: string, originalMessage: Message, message: ArrayBuffer): boolean</li>
 							<li>replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message></li>
 							<li>broadcast(message: ArrayBuffer)</li>
+							<li>broadcastAndListen(message: ArrayBuffer): Promise<Message>[]</li>
 						</ul>
 					</li>
-					<li>[TO DO] Automatically calculates latency and differences in internal clock timestamp between each pair of nodes</li>
+					<li>Calculate latency between peers at regular intervals</li>
+					<li>Clock synchronization by <a href="https://en.wikipedia.org/wiki/Cristian%27s_algorithm">Cristian&#39;s algorithm</a></li>
 					<li>[TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them</li>
 					<li>[TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority</li>
 				</ul>
@@ -150,9 +151,16 @@
 <span style="color: #000000">      }</span>
 <span style="color: #000000">    });</span>
 <span style="color: #000000">});</span>
+
 <span style="color: #008000">// broadcast a message to all peers</span>
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">message</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">ArrayBuffer</span><span style="color: #000000">(</span><span style="color: #001080">size</span><span style="color: #000000">);</span>
 <span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">broadcast</span><span style="color: #000000">(</span><span style="color: #001080">message</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// broadcast a message to all peers an listen for replies</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">greeting</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextEncoder</span><span style="color: #000000">().</span><span style="color: #795E26">encode</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;hello all!, I am Peter!&#039;</span><span style="color: #000000">).</span><span style="color: #001080">buffer</span><span style="color: #000000">;</span>
+<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">broadcastAndListen</span><span style="color: #000000">(</span><span style="color: #001080">greeting</span><span style="color: #000000">).</span><span style="color: #795E26">forEach</span><span style="color: #000000">(</span><span style="color: #001080">promise</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">promise</span><span style="color: #000000">.</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">reply</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextDecoder</span><span style="color: #000000">().</span><span style="color: #795E26">decode</span><span style="color: #000000">(</span><span style="color: #001080">reply</span><span style="color: #000000">.</span><span style="color: #001080">body</span><span style="color: #000000">));</span>
+<span style="color: #000000">}));</span>
 
 <span style="color: #008000">// send a message to a peer</span>
 <span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #001080">remotePeer</span><span style="color: #000000">.</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">);</span>
@@ -167,6 +175,7 @@
 <span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #001080">messageEmitter</span><span style="color: #000000">.</span><span style="color: #795E26">addEventListener</span><span style="color: #000000">((</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">  </span><span style="color: #008000">// uuid of the remote peer</span>
 <span style="color: #000000">  </span><span style="color: #008000">// message.timestamp : remote timestamp</span>
+<span style="color: #000000">  </span><span style="color: #008000">// message.timestampToLocalTime : remote timestamp converted to local time</span>
 <span style="color: #000000">  </span><span style="color: #008000">// message.sequence: message sequence</span>
 <span style="color: #000000">  </span><span style="color: #008000">// message.body: ArrayBuffer</span>
 <span style="color: #000000">  </span><span style="color: #008000">// message.type (1 - send ; 2 - sendAndListen ; 3 - reply ; 4 - replyAndListen)</span>
@@ -198,6 +207,7 @@
 				</a>
 				<ul>
 					<li><a href="https://0khp9.csb.app">Simple game in which you create or enter a room with other players.</a></li>
+					<li><a href="https://ix5w5.csb.app/test-planck-multi.html">Phaser + Planck.js multiplayer demo</a></li>
 				</ul>
 			</div>
 		</div>
@@ -226,6 +236,12 @@
 					<li class=" tsd-kind-class">
 						<a href="classes/peerrecord.html" class="tsd-kind-icon">Peer<wbr>Record</a>
 					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#getlocaltimestamp" class="tsd-kind-icon">get<wbr>Local<wbr>Timestamp</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#setdebug" class="tsd-kind-icon">set<wbr>Debug</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -239,6 +255,7 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>

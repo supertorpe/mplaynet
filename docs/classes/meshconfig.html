@@ -86,6 +86,10 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="meshconfig.html#checklatencyinterval" class="tsd-kind-icon">check<wbr>Latency<wbr>Interval</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="meshconfig.html#messagesawaitingreplycleanerinterval" class="tsd-kind-icon">messages<wbr>Awaiting<wbr>Reply<wbr>Cleaner<wbr>Interval</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="meshconfig.html#messagesawaitingreplymaxage" class="tsd-kind-icon">messages<wbr>Awaiting<wbr>Reply<wbr>Max<wbr>Age</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="meshconfig.html#messagesawaitingreplymaxsize" class="tsd-kind-icon">messages<wbr>Awaiting<wbr>Reply<wbr>Max<wbr>Size</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="meshconfig.html#rtcconfig" class="tsd-kind-icon">rtc<wbr>Config</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="meshconfig.html#rtcdatachannelinit" class="tsd-kind-icon">rtc<wbr>Data<wbr>Channel<wbr>Init</a></li>
 							</ul>
@@ -99,13 +103,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Mesh<wbr>Config<span class="tsd-signature-symbol">(</span>_rtcConfig<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RTCConfiguration</span>, _rtcDataChannelInit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RTCDataChannelInit</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="meshconfig.html" class="tsd-signature-type" data-tsd-kind="Class">MeshConfig</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Mesh<wbr>Config<span class="tsd-signature-symbol">(</span>_rtcConfig<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RTCConfiguration</span>, _rtcDataChannelInit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RTCDataChannelInit</span>, _messagesAwaitingReplyMaxSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, _messagesAwaitingReplyMaxAge<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, _messagesAwaitingReplyCleanerInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, _checkLatencyInterval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="meshconfig.html" class="tsd-signature-type" data-tsd-kind="Class">MeshConfig</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/a980692/src/mesh-config.ts#L1">mesh-config.ts:1</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L1">mesh-config.ts:1</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -116,6 +120,18 @@
 								<li>
 									<h5>_rtcDataChannelInit: <span class="tsd-signature-type">RTCDataChannelInit</span></h5>
 								</li>
+								<li>
+									<h5>_messagesAwaitingReplyMaxSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>_messagesAwaitingReplyMaxAge: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>_messagesAwaitingReplyCleanerInterval: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>_checkLatencyInterval: <span class="tsd-signature-type">number</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="meshconfig.html" class="tsd-signature-type" data-tsd-kind="Class">MeshConfig</a></h4>
 						</li>
@@ -124,6 +140,74 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="checklatencyinterval" class="tsd-anchor"></a>
+					<h3>check<wbr>Latency<wbr>Interval</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> checkLatencyInterval<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L62">mesh-config.ts:62</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="messagesawaitingreplycleanerinterval" class="tsd-anchor"></a>
+					<h3>messages<wbr>Awaiting<wbr>Reply<wbr>Cleaner<wbr>Interval</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> messagesAwaitingReplyCleanerInterval<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L59">mesh-config.ts:59</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="messagesawaitingreplymaxage" class="tsd-anchor"></a>
+					<h3>messages<wbr>Awaiting<wbr>Reply<wbr>Max<wbr>Age</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> messagesAwaitingReplyMaxAge<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L56">mesh-config.ts:56</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="messagesawaitingreplymaxsize" class="tsd-anchor"></a>
+					<h3>messages<wbr>Awaiting<wbr>Reply<wbr>Max<wbr>Size</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> messagesAwaitingReplyMaxSize<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L53">mesh-config.ts:53</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="rtcconfig" class="tsd-anchor"></a>
 					<h3>rtc<wbr>Config</h3>
@@ -134,7 +218,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/a980692/src/mesh-config.ts#L40">mesh-config.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L47">mesh-config.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RTCConfiguration</span></h4>
@@ -151,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/a980692/src/mesh-config.ts#L43">mesh-config.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/supertorpe/mplaynet/blob/d0c86c1/src/mesh-config.ts#L50">mesh-config.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RTCDataChannelInit</span></h4>
@@ -185,6 +269,18 @@
 								<a href="meshconfig.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="meshconfig.html#checklatencyinterval" class="tsd-kind-icon">check<wbr>Latency<wbr>Interval</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="meshconfig.html#messagesawaitingreplycleanerinterval" class="tsd-kind-icon">messages<wbr>Awaiting<wbr>Reply<wbr>Cleaner<wbr>Interval</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="meshconfig.html#messagesawaitingreplymaxage" class="tsd-kind-icon">messages<wbr>Awaiting<wbr>Reply<wbr>Max<wbr>Age</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="meshconfig.html#messagesawaitingreplymaxsize" class="tsd-kind-icon">messages<wbr>Awaiting<wbr>Reply<wbr>Max<wbr>Size</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="meshconfig.html#rtcconfig" class="tsd-kind-icon">rtc<wbr>Config</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -200,6 +296,12 @@
 					<li class=" tsd-kind-class">
 						<a href="peerrecord.html" class="tsd-kind-icon">Peer<wbr>Record</a>
 					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#getlocaltimestamp" class="tsd-kind-icon">get<wbr>Local<wbr>Timestamp</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../modules.html#setdebug" class="tsd-kind-icon">set<wbr>Debug</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -213,6 +315,7 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>

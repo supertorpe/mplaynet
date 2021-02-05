@@ -71,11 +71,11 @@ export abstract class BaseSignaling {
     public startPairings(mesh: Mesh) {
         let pairing = true;
         return new Promise<boolean>((resolve) => {
-            mesh.meshReadyEmitter.addEventListener((uuid, ready) => {
+            mesh.meshReadyEmitter.addEventListener((_uuid, ready) => {
                 this.cleanup();
                 resolve(ready);
             });
-            mesh.connectionReadyEmitter.addEventListener((_uuid, ready) => {
+            mesh.connectionReadyEmitter.addEventListener((_uuid, _ready) => {
                 if (!pairing) {
                     return;
                 }
