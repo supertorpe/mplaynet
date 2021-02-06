@@ -47,10 +47,3 @@ button {
 #roomCodeLabel {
   color: darkblue;
 }
-.gameArea {
-  display: none;
-  width: 500px;
-  height: 500px;
-  background-color: lightgray;
-  position: relative;
-}

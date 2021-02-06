@@ -1,7 +1,7 @@
 const { getLocalTimestamp } = mplaynet;
 
 const DEBUG = {
-  GAMESTATE: true,
+  GAMESTATE: false,
   SEND: false,
   RECEIVE: false,
   INFO: false,
