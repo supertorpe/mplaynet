@@ -12,6 +12,7 @@ const TIMESLICE = 100;
 const RENDER_DELAY = 2;
 const WORLD_SCALE = 30; // Box2D works with meters. We need to convert meters to pixels. let's say 30 pixels = 1 meter.
 const LAG_SIMULATION = 0;
+const MAKE_INTERPOLATION = true;
 
 class MainScene extends Phaser.Scene {
   constructor(peers, mesh, timeToStart) {
@@ -25,6 +26,13 @@ class MainScene extends Phaser.Scene {
     this.mesh = mesh;
     mesh.messageEmitter.addEventListener((uuid, message) => {
       this.messageReceived(uuid, message);
+    });
+    mesh.connectionReadyEmitter.addEventListener((uuid, ready) => {
+      if (!ready) {
+        // player disconnected
+        const peer = peers.find((peer) => peer.uuid === uuid);
+        peer.disconnected = true;
+      }
     });
     this.gameHistory = [];
     this.commandBuffer = [];
@@ -204,11 +212,16 @@ class MainScene extends Phaser.Scene {
     const gameState = this.gameHistory[gameStateIdx];
     // make interpolation ?
     let timeDiff, gameStateNext;
-    if (this.gameHistory.length > gameStateIdx + 1) {
+    if (MAKE_INTERPOLATION && this.gameHistory.length > gameStateIdx + 1) {
       timeDiff = getLocalTimestamp() - gameState.time;
       gameStateNext = this.gameHistory[gameStateIdx + 1];
     }
     for (let [index, body] of gameState.bodies.entries()) {
+      if (
+        !body.isActive() ||
+        (gameStateNext && !gameStateNext.bodies[index].isActive())
+      )
+        continue;
       const phaserObject = body.getUserData();
       if (phaserObject) {
         if (timeDiff && phaserObject.name !== 'coin') {
@@ -227,7 +240,9 @@ class MainScene extends Phaser.Scene {
     }
     for (let [index, peer] of this.peers.entries()) {
       this.scoreTexts[index].setText(
-        `${peer.username}: ${gameState.scores[index]}`
+        `${peer.username}: ${gameState.scores[index]} ${
+          peer.disconnected ? ' (disconnected)' : ''
+        }`
       );
     }
   }
@@ -411,7 +426,20 @@ class MainScene extends Phaser.Scene {
     }
     // hack: planck serialization does not dump userData
     for (let [index, body] of result.bodies.entries()) {
-      body.setUserData(gameState.bodies[index].getUserData());
+      if (body === null) continue;
+      const phaserObject = gameState.bodies[index]
+        ? gameState.bodies[index].getUserData()
+        : null;
+      if (
+        index >= 4 &&
+        index < this.peers.length + 4 && // remove disconnected players. ignore walls and coin
+        this.peers[index - 4].disconnected
+      ) {
+        if (phaserObject) phaserObject.destroy();
+        body.setActive(false);
+        continue;
+      }
+      body.setUserData(phaserObject);
       if (body.getUserData() && body.getUserData().name === 'coin') {
         planckCoin = body;
       }
@@ -436,7 +464,8 @@ class MainScene extends Phaser.Scene {
       if (result.coinCollected) {
         return;
       }
-      if ('coin' === contact.getFixtureB().getBody().getUserData().name) {
+      let phaserObj = contact.getFixtureB().getBody().getUserData();
+      if (phaserObj && 'coin' === phaserObj.name) {
         const playeWhoCollectedTheCoin = contact
           .getFixtureA()
           .getBody()
@@ -511,6 +540,7 @@ class MainScene extends Phaser.Scene {
         break;
     }
   }
+
   /*
   serializeGameStates(list) {
       const result = [];
