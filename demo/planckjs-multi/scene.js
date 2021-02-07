@@ -41,6 +41,9 @@ class MainScene extends Phaser.Scene {
     this.load.image('enemy', './assets/enemy.png');
     this.load.image('coin', './assets/coin.png');
     this.load.audio('success', './assets/success.mp3');
+    const url =
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+    this.load.plugin('rexvirtualjoystickplugin', url, true);
   }
 
   create() {
@@ -64,6 +67,19 @@ class MainScene extends Phaser.Scene {
     /////////////////// KEYBOARD ///////////////////
     this.arrow = this.input.keyboard.createCursorKeys();
 
+    /////////////////// JOYSTICK ///////////////////
+    this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+      x: 450,
+      y: 450,
+      radius: 25,
+      base: this.add.circle(0, 0, 50, 0x888888),
+      thumb: this.add.circle(0, 0, 25, 0xcccccc),
+      // dir: '8dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
+      // forceMin: 16,
+      // enable: true
+    });
+    this.joystickKeys = this.joyStick.createCursorKeys();
+
     /////////////////// INITIAL GAME STATE ///////////////////
     this.serializer = new planck.Serializer();
     const initialGameState = this.createInitialGameState();
@@ -73,7 +89,6 @@ class MainScene extends Phaser.Scene {
   }
 
   clone(object) {
-    //return Flatted.parse(Flatted.stringify(object));
     return this.serializer.fromJson(this.serializer.toJson(object));
   }
 
@@ -145,9 +160,21 @@ class MainScene extends Phaser.Scene {
       }
     }
 
-    let commandValue =
-      (this.arrow.right.isDown ? 10 : this.arrow.left.isDown ? 20 : 0) +
-      (this.arrow.down.isDown ? 1 : this.arrow.up.isDown ? 2 : 0);
+    let right =
+      this.arrow.right.isDown ||
+      (this.joystickKeys['right'] && this.joystickKeys['right'].isDown);
+    let left =
+      this.arrow.left.isDown ||
+      (this.joystickKeys['left'] && this.joystickKeys['left'].isDown);
+    let down =
+      this.arrow.down.isDown ||
+      (this.joystickKeys['down'] && this.joystickKeys['down'].isDown);
+    let up =
+      this.arrow.up.isDown ||
+      (this.joystickKeys['up'] && this.joystickKeys['up'].isDown);
+
+    let commandValue = (right ? 10 : left ? 20 : 0) + (down ? 1 : up ? 2 : 0);
+
     let command = this.latestGameState.commands[this.myIndex];
     if ((!command || command[2] === 0) && commandValue !== 0) {
       command = new Uint16Array(4);
@@ -485,40 +512,40 @@ class MainScene extends Phaser.Scene {
     }
   }
   /*
-    serializeGameStates(list) {
-        const result = [];
-        list.forEach((item) => {
-            result.push({
-                slice: item.slice,
-                time: item.time,
-                world: this.serializer.toJson(item.world),
-                scores: item.scores,
-                ramdomPointer: item.ramdomPointer,
-                coinCollected: item.coinCollected,
-                commands: item.commands
-            });
-        });
-        return JSON.stringify(result);
-    }
+  serializeGameStates(list) {
+      const result = [];
+      list.forEach((item) => {
+          result.push({
+              slice: item.slice,
+              time: item.time,
+              world: this.serializer.toJson(item.world),
+              scores: item.scores,
+              ramdomPointer: item.ramdomPointer,
+              coinCollected: item.coinCollected,
+              commands: item.commands
+          });
+      });
+      return JSON.stringify(result);
+  }
 
-    deserializeGameStates(json) {
-        const result = JSON.parse(json);
-        result.forEach((item) => {
-            item.world = this.serializer.fromJson(item.world);
-            item.bodies = [];
-            for (let b = item.world.getBodyList(); b; b = b.getNext()) {
-                item.bodies.unshift(b);
-            }
-            // hack: planck serialization does not dump userData
-            for (let [index, body] of item.bodies.entries()) {
-                body.setUserData(this.latestGameState.bodies[index].getUserData());
-                //if (body.getUserData() && body.getUserData().name === "coin") {
-                //    planckCoin = body;
-                //}
-            }
-        });
-        return result;
-    }
+  deserializeGameStates(json) {
+      const result = JSON.parse(json);
+      result.forEach((item) => {
+          item.world = this.serializer.fromJson(item.world);
+          item.bodies = [];
+          for (let b = item.world.getBodyList(); b; b = b.getNext()) {
+              item.bodies.unshift(b);
+          }
+          // hack: planck serialization does not dump userData
+          for (let [index, body] of item.bodies.entries()) {
+              body.setUserData(this.latestGameState.bodies[index].getUserData());
+              //if (body.getUserData() && body.getUserData().name === "coin") {
+              //    planckCoin = body;
+              //}
+          }
+      });
+      return result;
+  }
 */
   nextRamdom(ramdomPointer, min, max) {
     ramdomPointer++;
