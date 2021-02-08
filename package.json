@@ -1,6 +1,6 @@
 {
   "name": "mplaynet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mesh WebRTC library",
   "main": "dist/mplaynet.umd.js",
   "types": "dist/mplaynet.d.ts",
