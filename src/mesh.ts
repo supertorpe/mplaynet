@@ -86,6 +86,10 @@ export class Mesh {
     );
   }
 
+  public connectionOpened(uuid: string) {
+    return this.findConnection(uuid)?.isOpen;
+  }
+
   private findConnection(uuid: string): MeshConnection | undefined {
     return this._connections.find((conn) => conn.uuid === uuid);
   }

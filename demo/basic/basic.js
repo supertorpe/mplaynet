@@ -30,10 +30,10 @@ const meshConfig = new MeshConfig(
   {
     ordered: false, maxRetransmits: 1
   },
-  1000, // messagesAwaitingReplyMaxSize
+   1000, // messagesAwaitingReplyMaxSize
   10000, // messagesAwaitingReplyMaxAge
-  5000, // messagesAwaitingReplyCleanerInterval
-  5000 //checkLatencyInterval
+   5000, // messagesAwaitingReplyCleanerInterval
+   5000  // checkLatencyInterval
 );
 
 const mesh = new Mesh(meshConfig, myUUID);
@@ -41,29 +41,40 @@ const mesh = new Mesh(meshConfig, myUUID);
 /*************
  * SIGNALING *
  *************/
-
+let pairingDone = false;
+signaller.autoclean = false;
 signaller.roomRecordEmitter.addEventListener((uuid, event) => {
   console.log('room info changed: ' + JSON.stringify(event));
-  hostGame.style.display = 'none';
-  joinGame.style.display = 'none';
-  waiting.style.display = 'flex';
-  roomCodeLabel.innerHTML = event.roomId;
-  numPlayersLabel.innerHTML = event.peers.length;
-  numPlayersReadyLabel.innerHTML = event.peers.reduce(
-    (total, peer) => (peer.ready ? ++total : total),
-    0
-  );
-  // all (n > 1) players ready ?
-  if (event.peers.length > 1 && event.peers.every((peer) => peer.ready)) {
-    signaller.startPairings(mesh).then((ok) => {
-      if (ok) {
-        waiting.style.display = 'none';
-        gameArea.style.display = 'flex';
-        startGame(event.peers);
-      } else {
-        alert('Error while paring players');
-      }
-    });
+  if (!pairingDone) {
+    hostGame.style.display = 'none';
+    joinGame.style.display = 'none';
+    waiting.style.display = 'flex';
+    roomCodeLabel.innerHTML = event.roomId;
+    numPlayersLabel.innerHTML = event.peers.length;
+    numPlayersReadyLabel.innerHTML = event.peers.reduce(
+      (total, peer) => (peer.ready ? ++total : total),
+      0
+    );
+    // all (n > 1) players ready ?
+    if (event.peers.length > 1 && event.peers.every((peer) => peer.ready)) {
+      signaller.startPairings(mesh).then((ok) => {
+        if (ok) {
+          pairingDone = true;
+          waiting.style.display = 'none';
+          gameArea.style.display = 'flex';
+          startGame(event.peers);
+        } else {
+          alert('Error while paring players');
+        }
+      });
+    }
+  } else { // late join
+    // all (n > 1) players ready ?
+    if (event.peers.length > 1 && event.peers.every((peer) => peer.ready)) {
+      signaller.newPairings(mesh).then((uuid) => {
+        newPlayer(uuid, event.peers);
+      });
+    }
   }
 });
 
@@ -150,33 +161,23 @@ let players = [];
 let myPlayer;
 const startGame = (peers) => {
   for (let [index, peer] of peers.entries()) {
-    gameArea.innerHTML += `<div id="player_${index}" class="player">${peer.username}</div>`;
+    const disconnected = peer.uuid != myUUID && !mesh.connectionOpened(peer.uuid);
+    if (!disconnected) gameArea.innerHTML += `<div id="player_${index}" class="player">${peer.username}</div>`;
     const player = {
       index: index,
       uuid: peer.uuid,
       selector: `#player_${index}`,
       top: 10,
       left: 10 + (SIZE + 5) * index,
-      disconnected: false
+      disconnected: disconnected,
+      initialized: peer.uuid == myUUID
     };
     players.push(player);
     if (peer.uuid == myUUID) {
       myPlayer = player;
-
-      const message = `broadcast greeting: hello, I am ${myUUID}!`;
-      const greeting = new TextEncoder().encode(message).buffer;
-      mesh.broadcastAndListen(greeting).forEach(promise => promise.then(reply => {
-        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my broadcast message "${message}"  [remoteTimestamp=${reply.timestamp}, toLocalTime=${reply.timestampToLocalTime}]`);
-      }));
+      drawPlayer(player);
     } else {
-      // send welcome message and wait for response
-      const message = `unicast greeting: hello, I am ${myUUID}!`;
-      const greeting = new TextEncoder().encode(message).buffer;
-      mesh.sendAndListen(peer.uuid, greeting).then(reply => {
-        console.log(`received "${new TextDecoder().decode(reply.body)}" as reply to my unicast message "${message}"  [remoteTimestamp=${reply.timestamp}, toLocalTime=${reply.timestampToLocalTime}]`);
-      });
     }
-    drawPlayer(player);
   }
 
   mesh.connectionReadyEmitter.addEventListener((uuid, ready) => {
@@ -203,12 +204,33 @@ const startGame = (peers) => {
     const move = new Int16Array(message.body);
     const player = players.find(player => !player.disconnected && player.uuid === uuid);
     if (player) {
+      player.initialized = true;
       player.realTop = move[0];
       player.realLeft = move[1];
     }
   });
 
+  sendMove();
+
   window.requestAnimationFrame(gameLoop);
+};
+
+const newPlayer = (uuid, peers) => {
+  const index = peers.findIndex(p => p.uuid === uuid);
+  const peer = peers[index];
+  gameArea.innerHTML += `<div id="player_${index}" class="player">${peer.username}</div>`;
+  const player = {
+    index: index,
+    uuid: peer.uuid,
+    selector: `#player_${index}`,
+    top: 10,
+    left: 10 + (SIZE + 5) * index,
+    disconnected: false
+  };
+  players.push(player);
+  setTimeout(function () {
+    mesh.send(peer.uuid, move.buffer);
+  }, 500);
 };
 
 const drawPlayer = (player) => {
@@ -223,7 +245,7 @@ const drawPlayer = (player) => {
 };
 
 const draw = () => {
-  players.forEach((player) => !player.disconnected && drawPlayer(player));
+  players.forEach((player) => !player.disconnected && player.initialized && drawPlayer(player));
 };
 
 const pressedKeys = {};
@@ -371,3 +393,4 @@ const sendMove = () => {
     }, LAG);
   }
 };
+

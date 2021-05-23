@@ -9,6 +9,7 @@ export abstract class BaseSignaling {
     protected roomRecord: RoomRecord | null = null;
     protected _roomRecordEmitter: EventEmitter<RoomRecord>;
     protected pairingMap: Map<string, PairingItem> = new Map();
+    protected _autoclean = true;
 
     get roomRecordEmitter(): EventEmitter<RoomRecord> {
         return this._roomRecordEmitter;
@@ -16,6 +17,14 @@ export abstract class BaseSignaling {
 
     get uuid(): string {
         return this._uuid;
+    }
+
+    get autoclean(): boolean {
+        return this._autoclean;
+    }
+
+    set autoclean(value: boolean) {
+        this._autoclean = value;
     }
 
     constructor() {
@@ -69,28 +78,58 @@ export abstract class BaseSignaling {
     }
 
     public startPairings(mesh: Mesh) {
-        let pairing = true;
+        let pairingsDone : string[] = [];
         return new Promise<boolean>((resolve) => {
             mesh.meshReadyEmitter.addEventListener((_uuid, ready) => {
-                this.cleanup();
+                if (this._autoclean) {
+                    this.cleanup();
+                }
                 resolve(ready);
             });
             mesh.connectionReadyEmitter.addEventListener((_uuid, _ready) => {
-                if (!pairing) {
+                if (pairingsDone.includes(_uuid)) {
                     return;
                 }
+                pairingsDone.push(_uuid);
                 const connectionCount = mesh.connectionCount();
                 const connectionsOpened = mesh.connectionsOpened();
                 if (MPLAYNET_DEBUG) console.log(`opened ${connectionsOpened} of ${connectionCount} connections`);
-                if (connectionsOpened === connectionCount) {
-                    pairing = false;
-                }
+                //if (connectionsOpened === connectionCount) {
+                //    pairing = false;
+                //}
             });
             mesh.iceCandidateEmitter.addEventListener((uuid, candidate) => {
                 let sCandidate = JSON.stringify(candidate);
                 if (!candidate.candidate) return;
                 if (MPLAYNET_DEBUG) console.log(`candidate: ${sCandidate}`);
                 this.saveIceCandidate(uuid, sCandidate);
+            });
+            if (this.roomRecord) {
+                const myIndex = this.roomRecord.peers.findIndex((peer) => peer.uuid === this._uuid);
+                for (let [index, peer] of this.roomRecord.peers.entries()) {
+                    if (index === myIndex) {
+                        continue;
+                    }
+                    this.savePairing(mesh, myIndex, index, peer);
+                }
+            }
+        });
+    }
+
+    public newPairings(mesh: Mesh) {
+        return new Promise<string>((resolve) => {
+            /*
+            mesh.meshReadyEmitter.addEventListener((_uuid, ready) => {
+                if (this._autoclean) {
+                    this.cleanup();
+                }
+                resolve(ready);
+            });
+            */
+            mesh.connectionReadyEmitter.addEventListener((_uuid, _ready) => {
+                if (_ready) {
+                    resolve(_uuid);
+                }
             });
             if (this.roomRecord) {
                 const myIndex = this.roomRecord.peers.findIndex((peer) => peer.uuid === this._uuid);
