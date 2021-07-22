@@ -1,6 +1,6 @@
 # mplaynet
 
-Typescript library to manage a mesh WebRTC network (pre-alpha)
+Typescript library to manage a mesh WebRTC network (beta)
 
 ## Features
 
@@ -20,8 +20,6 @@ Typescript library to manage a mesh WebRTC network (pre-alpha)
     - broadcastAndListen(message: ArrayBuffer): Promise<Message>[]
 - Calculate latency between peers at regular intervals
 - Clock synchronization by [Cristian's algorithm](https://en.wikipedia.org/wiki/Cristian%27s_algorithm)
-- [TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them
-- [TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority
 
 ## Install and usage
 
