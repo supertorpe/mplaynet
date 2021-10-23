@@ -1,6 +1,6 @@
-import { EventEmitter } from "../event-emitter";
-import { Mesh } from "../mesh";
-import { MPLAYNET_DEBUG, uuidv4 } from "../utils";
+import { EventEmitter } from "./event-emitter";
+import { Mesh } from "./mesh";
+import { MPLAYNET_DEBUG, uuidv4 } from "./utils";
 import { PairingItem, PairingRecord, PeerRecord, RoomRecord } from "./records";
 
 export abstract class BaseSignaling {

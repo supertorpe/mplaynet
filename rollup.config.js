@@ -2,12 +2,13 @@ import typescript from '@rollup/plugin-typescript';
 
 export default [
   {
-    input: 'src/mplaynet.ts',
+    input: 'src/index.ts',
     external: [],
     output: [
       {
         file: 'dist/mplaynet.esm.js',
         format: 'es',
+        sourcemap: true,
       },
       {
         file: 'dist/mplaynet.umd.js',
@@ -17,15 +18,16 @@ export default [
         },
       },
     ],
-    plugins: [typescript()],
+    plugins: [typescript({ sourceMap: true })],
   },
   {
-    input: 'src/mplaynet-deepstream.ts',
+    input: 'src/deepstream/index.ts',
     external: ['@deepstream/client'],
     output: [
       {
         file: 'dist/mplaynet-deepstream.esm.js',
         format: 'es',
+        sourcemap: true,
       },
       {
         file: 'dist/mplaynet-deepstream.umd.js',
@@ -36,15 +38,16 @@ export default [
         },
       },
     ],
-    plugins: [typescript()],
+    plugins: [typescript({ sourceMap: true })],
   },
   {
-    input: 'src/mplaynet-firebase.ts',
+    input: 'src/firebase/index.ts',
     external: ['firebase/app'],
     output: [
       {
         file: 'dist/mplaynet-firebase.esm.js',
         format: 'es',
+        sourcemap: true,
       },
       {
         file: 'dist/mplaynet-firebase.umd.js',
@@ -55,6 +58,6 @@ export default [
         },
       },
     ],
-    plugins: [typescript()],
+    plugins: [typescript({ sourceMap: true })],
   }
 ];

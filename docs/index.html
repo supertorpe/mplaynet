@@ -1,280 +1,72 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>mplaynet</title>
-	<meta name="description" content="Documentation for mplaynet">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">mplaynet</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<h1>Project mplaynet</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<a href="#mplaynet" id="mplaynet" style="color: inherit; text-decoration: none;">
-					<h1>mplaynet</h1>
-				</a>
-				<p>Typescript library to manage a mesh WebRTC network (pre-alpha)</p>
-				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
-					<h2>Features</h2>
-				</a>
-				<ul>
-					<li>Manage multiple WebRTC connections</li>
-					<li>Provides multiple signaling mechanisms so you don&#39;t have to worry about the offer / answers / iceCandidates racking:<ul>
-							<li>Signaling using Deepstream.io into a separate bundle</li>
-							<li>Signaling using firebase into a separate bundle</li>
-							<li>Signaling using localStorage for development purposes</li>
-						</ul>
-					</li>
-					<li>Add header with timestamp and sequence to messages</li>
-					<li>Handle disconnections gracefully</li>
-					<li>Communication primitives<ul>
-							<li>send(uuid: string, message: ArrayBuffer): boolean</li>
-							<li>sendAndListen(uuid: string, message: ArrayBuffer): Promise<Message></li>
-							<li>reply(uuid: string, originalMessage: Message, message: ArrayBuffer): boolean</li>
-							<li>replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message></li>
-							<li>broadcast(message: ArrayBuffer)</li>
-							<li>broadcastAndListen(message: ArrayBuffer): Promise<Message>[]</li>
-						</ul>
-					</li>
-					<li>Calculate latency between peers at regular intervals</li>
-					<li>Clock synchronization by <a href="https://en.wikipedia.org/wiki/Cristian%27s_algorithm">Cristian&#39;s algorithm</a></li>
-					<li>[TO DO] Stores a buffer of messages, ordered by timestamp, in case the client application needs to reproduce them</li>
-					<li>[TO DO] Implement the Raft consensus algorithm in order to establish a distributed authority</li>
-				</ul>
-				<a href="#install-and-usage" id="install-and-usage" style="color: inherit; text-decoration: none;">
-					<h2>Install and usage</h2>
-				</a>
-				<p>You can either import mplaynet via NPM or directly use it via script tag.</p>
-				<a href="#npm" id="npm" style="color: inherit; text-decoration: none;">
-					<h3>NPM:</h3>
-				</a>
-				<p>First, run: <code>npm i mplaynet</code></p>
-				<pre><code class="language-js"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Mesh</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;mplaynet&#039;</span><span style="color: #000000">;</span>
+<!DOCTYPE html><html class="default no-js"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>mplaynet</title><meta name="description" content="Documentation for mplaynet"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem(&quot;tsd-theme&quot;) || &quot;os&quot;)</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">mplaynet</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>mplaynet</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#mplaynet" id="mplaynet" style="color: inherit; text-decoration: none;">
+  <h1>mplaynet</h1>
+</a>
+<p>Typescript library to manage a mesh WebRTC network (beta)</p>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">myMesh</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Mesh</span><span style="color: #000000">();</span>
+<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+  <h2>Features</h2>
+</a>
+<ul>
+<li>Manage multiple WebRTC connections</li>
+<li>Provides multiple signaling mechanisms so you don&#39;t have to worry about the offer / answers / iceCandidates racking:<ul>
+<li>Signaling using Deepstream.io into a separate bundle</li>
+<li>Signaling using firebase into a separate bundle</li>
+<li>Signaling using localStorage for development purposes</li>
+</ul>
+</li>
+<li>Add header with timestamp and sequence to messages</li>
+<li>Handle disconnections gracefully</li>
+<li>Communication primitives<ul>
+<li>send(uuid: string, message: ArrayBuffer): boolean</li>
+<li>sendAndListen(uuid: string, message: ArrayBuffer): Promise<Message></li>
+<li>reply(uuid: string, originalMessage: Message, message: ArrayBuffer): boolean</li>
+<li>replyAndListen(uuid: string, originalMessage: Message, message: ArrayBuffer): Promise<Message></li>
+<li>broadcast(message: ArrayBuffer)</li>
+<li>broadcastAndListen(message: ArrayBuffer): Promise<Message>[]</li>
+</ul>
+</li>
+<li>Calculate latency between peers at regular intervals</li>
+<li>Clock synchronization by <a href="https://en.wikipedia.org/wiki/Cristian%27s_algorithm">Cristian&#39;s algorithm</a></li>
+</ul>
+
+<a href="#install-and-usage" id="install-and-usage" style="color: inherit; text-decoration: none;">
+  <h2>Install and usage</h2>
+</a>
+<p>You can either import mplaynet via NPM or directly use it via script tag.</p>
+
+<a href="#npm" id="npm" style="color: inherit; text-decoration: none;">
+  <h3>NPM:</h3>
+</a>
+<p>First, run: <code>npm i mplaynet</code></p>
+<pre><code class="language-js"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">Mesh</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;mplaynet&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">myMesh</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Mesh</span><span class="hl-1">();</span>
 </code></pre>
-				<a href="#directly-in-the-browser" id="directly-in-the-browser" style="color: inherit; text-decoration: none;">
-					<h3>Directly in the browser</h3>
-				</a>
-				<p>Add this script tag:</p>
-				<pre><code class="language-js"><span style="color: #800000">&lt;script</span><span style="color: #000000"> </span><span style="color: #FF0000">src</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet.umd.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+
+<a href="#directly-in-the-browser" id="directly-in-the-browser" style="color: inherit; text-decoration: none;">
+  <h3>Directly in the browser</h3>
+</a>
+<p>Add this script tag:</p>
+<pre><code class="language-js"><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-1"> </span><span class="hl-9">src</span><span class="hl-1">=</span><span class="hl-3">&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet.umd.min.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span>
 </code></pre>
-				<p>For Deepstream signaling add these tags:</p>
-				<pre><code class="language-js"><span style="color: #800000">&lt;script</span><span style="color: #000000"> </span><span style="color: #FF0000">src</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;//cdn.jsdelivr.net/npm/@deepstream/client@5.1.10/dist/bundle/ds.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
-<span style="color: #800000">&lt;script</span><span style="color: #000000"> </span><span style="color: #FF0000">src</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet-deepstream.umd.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+<p>For Deepstream signaling add these tags:</p>
+<pre><code class="language-js"><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-1"> </span><span class="hl-9">src</span><span class="hl-1">=</span><span class="hl-3">&quot;//cdn.jsdelivr.net/npm/@deepstream/client@5.1.10/dist/bundle/ds.min.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span><br/><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-1"> </span><span class="hl-9">src</span><span class="hl-1">=</span><span class="hl-3">&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet-deepstream.umd.min.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span>
 </code></pre>
-				<p>For Firebase signaling add these tags:</p>
-				<pre><code class="language-js"><span style="color: #800000">&lt;script</span><span style="color: #000000"> </span><span style="color: #FF0000">src</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
-<span style="color: #800000">&lt;script</span><span style="color: #000000"> </span><span style="color: #FF0000">src</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
-<span style="color: #800000">&lt;script</span><span style="color: #000000"> </span><span style="color: #FF0000">src</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet-firebase.umd.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+<p>For Firebase signaling add these tags:</p>
+<pre><code class="language-js"><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-1"> </span><span class="hl-9">src</span><span class="hl-1">=</span><span class="hl-3">&quot;https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span><br/><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-1"> </span><span class="hl-9">src</span><span class="hl-1">=</span><span class="hl-3">&quot;https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span><br/><span class="hl-7">&lt;</span><span class="hl-8">script</span><span class="hl-1"> </span><span class="hl-9">src</span><span class="hl-1">=</span><span class="hl-3">&quot;https://unpkg.com/mplaynet@latest/dist/mplaynet-firebase.umd.min.js&quot;</span><span class="hl-7">&gt;&lt;/</span><span class="hl-8">script</span><span class="hl-7">&gt;</span>
 </code></pre>
-				<a href="#establish-connections-send-and-receive-messages" id="establish-connections-send-and-receive-messages" style="color: inherit; text-decoration: none;">
-					<h3>Establish connections, send and receive messages</h3>
-				</a>
-				<p>see demo folder for details</p>
-				<pre><code class="language-js"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">meshConfig</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">MeshConfig</span><span style="color: #000000">(...);</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">mesh</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Mesh</span><span style="color: #000000">(</span><span style="color: #001080">meshConfig</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
 
-<span style="color: #008000">// deepstream signaling</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">DeepstreamSignaling</span><span style="color: #000000"> } = </span><span style="color: #001080">mplaynetDeepstream</span><span style="color: #000000">;</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">signaller</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">DeepstreamSignaling</span><span style="color: #000000">(</span><span style="color: #0070C1">DEEPSTREAM_URL</span><span style="color: #000000">);</span>
-<span style="color: #008000">// OR firebase signaling</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">FirebaseSignaling</span><span style="color: #000000"> } = </span><span style="color: #001080">mplaynetFirebase</span><span style="color: #000000">;</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">signaller</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">FirebaseSignaling</span><span style="color: #000000">({</span>
-<span style="color: #000000">  </span><span style="color: #001080">apiKey:</span><span style="color: #000000"> </span><span style="color: #0070C1">FIREBASE_API_KEY</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">authDomain:</span><span style="color: #000000"> </span><span style="color: #0070C1">FIREBASE_AUTH_DOMAIN</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">projectId:</span><span style="color: #000000"> </span><span style="color: #0070C1">FIREBASE_PROJECT_ID</span>
-<span style="color: #000000">});</span>
-<span style="color: #008000">// OR localStorage signaling</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">LocalSignaling</span><span style="color: #000000"> } = </span><span style="color: #001080">mplaynet</span><span style="color: #000000">;</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">signaller</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">LocalSignaling</span><span style="color: #000000">();</span>
-
-<span style="color: #008000">// create a new room...</span>
-<span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">hostRoom</span><span style="color: #000000">(</span><span style="color: #001080">roomId</span><span style="color: #000000">, </span><span style="color: #001080">username</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">);</span>
-<span style="color: #008000">// ...or join an existin room</span>
-<span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">joinRoom</span><span style="color: #000000">(</span><span style="color: #001080">roomId</span><span style="color: #000000">, </span><span style="color: #001080">username</span><span style="color: #000000">, </span><span style="color: #001080">myUUID</span><span style="color: #000000">)</span>
-<span style="color: #000000"> </span><span style="color: #008000">// Triggered when a player joins the room or when he is ready to play.</span>
-<span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #001080">roomRecordEmitter</span><span style="color: #000000">.</span><span style="color: #795E26">addEventListener</span><span style="color: #000000">((</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">event</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> { </span>
-<span style="color: #000000">  </span><span style="color: #008000">// when all players are ready, start pairing:</span>
-<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (....</span><span style="color: #001080">all</span><span style="color: #000000"> </span><span style="color: #001080">players</span><span style="color: #000000"> </span><span style="color: #001080">ready</span><span style="color: #000000">...)</span>
-<span style="color: #000000">    </span><span style="color: #001080">signaller</span><span style="color: #000000">.</span><span style="color: #795E26">startPairings</span><span style="color: #000000">(</span><span style="color: #001080">mesh</span><span style="color: #000000">).</span><span style="color: #795E26">then</span><span style="color: #000000">((</span><span style="color: #001080">ok</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">      </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">ok</span><span style="color: #000000">) {</span>
-<span style="color: #000000">        </span><span style="color: #008000">// start game</span>
-<span style="color: #000000">      }</span>
-<span style="color: #000000">    });</span>
-<span style="color: #000000">});</span>
-
-<span style="color: #008000">// broadcast a message to all peers</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">message</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">ArrayBuffer</span><span style="color: #000000">(</span><span style="color: #001080">size</span><span style="color: #000000">);</span>
-<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">broadcast</span><span style="color: #000000">(</span><span style="color: #001080">message</span><span style="color: #000000">);</span>
-
-<span style="color: #008000">// broadcast a message to all peers an listen for replies</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">greeting</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextEncoder</span><span style="color: #000000">().</span><span style="color: #795E26">encode</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;hello all!, I am Peter!&#039;</span><span style="color: #000000">).</span><span style="color: #001080">buffer</span><span style="color: #000000">;</span>
-<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">broadcastAndListen</span><span style="color: #000000">(</span><span style="color: #001080">greeting</span><span style="color: #000000">).</span><span style="color: #795E26">forEach</span><span style="color: #000000">(</span><span style="color: #001080">promise</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">promise</span><span style="color: #000000">.</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">reply</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextDecoder</span><span style="color: #000000">().</span><span style="color: #795E26">decode</span><span style="color: #000000">(</span><span style="color: #001080">reply</span><span style="color: #000000">.</span><span style="color: #001080">body</span><span style="color: #000000">));</span>
-<span style="color: #000000">}));</span>
-
-<span style="color: #008000">// send a message to a peer</span>
-<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #001080">remotePeer</span><span style="color: #000000">.</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">);</span>
-
-<span style="color: #008000">// send a message to a peer and listen for reply</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">greeting</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextEncoder</span><span style="color: #000000">().</span><span style="color: #795E26">encode</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;hello, I am Peter!&#039;</span><span style="color: #000000">).</span><span style="color: #001080">buffer</span><span style="color: #000000">;</span>
-<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">sendAndListen</span><span style="color: #000000">(</span><span style="color: #001080">remotePeer</span><span style="color: #000000">.</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">greeting</span><span style="color: #000000">).</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">reply</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextDecoder</span><span style="color: #000000">().</span><span style="color: #795E26">decode</span><span style="color: #000000">(</span><span style="color: #001080">reply</span><span style="color: #000000">.</span><span style="color: #001080">body</span><span style="color: #000000">));</span>
-<span style="color: #000000">});</span>
-
-<span style="color: #008000">// receive messages from remote peers</span>
-<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #001080">messageEmitter</span><span style="color: #000000">.</span><span style="color: #795E26">addEventListener</span><span style="color: #000000">((</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #008000">// uuid of the remote peer</span>
-<span style="color: #000000">  </span><span style="color: #008000">// message.timestamp : remote timestamp</span>
-<span style="color: #000000">  </span><span style="color: #008000">// message.timestampToLocalTime : remote timestamp converted to local time</span>
-<span style="color: #000000">  </span><span style="color: #008000">// message.sequence: message sequence</span>
-<span style="color: #000000">  </span><span style="color: #008000">// message.body: ArrayBuffer</span>
-<span style="color: #000000">  </span><span style="color: #008000">// message.type (1 - send ; 2 - sendAndListen ; 3 - reply ; 4 - replyAndListen)</span>
-<span style="color: #000000">  </span><span style="color: #008000">// i.e. info = new Int16Array(message.body);</span>
-
-<span style="color: #000000">  </span><span style="color: #008000">// if the message was sent via &#039;sendAndListen&#039; or &#039;replyAndListen&#039;,</span>
-<span style="color: #000000">  </span><span style="color: #008000">// the peer is waiting for a reply</span>
-<span style="color: #000000">  </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">message</span><span style="color: #000000">.</span><span style="color: #001080">awaitReply</span><span style="color: #000000">) {</span>
-<span style="color: #000000">      </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">response</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextEncoder</span><span style="color: #000000">().</span><span style="color: #795E26">encode</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;nice to meet you&#039;</span><span style="color: #000000">).</span><span style="color: #001080">buffer</span><span style="color: #000000">;</span>
-<span style="color: #000000">      </span><span style="color: #008000">// send the reply</span>
-<span style="color: #000000">      </span><span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">reply</span><span style="color: #000000">(</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">, </span><span style="color: #001080">response</span><span style="color: #000000">);</span>
-<span style="color: #000000">      </span><span style="color: #008000">// OR send the reply and wait for a counter reply</span>
-<span style="color: #000000">      </span><span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #795E26">replyAndListen</span><span style="color: #000000">(</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">message</span><span style="color: #000000">, </span><span style="color: #001080">response</span><span style="color: #000000">).</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">counterReply</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TextDecoder</span><span style="color: #000000">().</span><span style="color: #795E26">decode</span><span style="color: #000000">(</span><span style="color: #001080">counterReply</span><span style="color: #000000">.</span><span style="color: #001080">body</span><span style="color: #000000">));</span>
-<span style="color: #000000">      });</span>
-<span style="color: #000000">      </span><span style="color: #AF00DB">return</span><span style="color: #000000">;</span>
-<span style="color: #000000">  }</span>
-<span style="color: #000000">});</span>
-
-<span style="color: #008000">// disconnection management</span>
-<span style="color: #001080">mesh</span><span style="color: #000000">.</span><span style="color: #001080">connectionReadyEmitter</span><span style="color: #000000">.</span><span style="color: #795E26">addEventListener</span><span style="color: #000000">((</span><span style="color: #001080">uuid</span><span style="color: #000000">, </span><span style="color: #001080">ready</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (!</span><span style="color: #001080">ready</span><span style="color: #000000">) { </span><span style="color: #008000">// player disconnected</span>
-<span style="color: #000000">      </span><span style="color: #008000">// ...remove player from screen</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">});</span>
+<a href="#establish-connections-send-and-receive-messages" id="establish-connections-send-and-receive-messages" style="color: inherit; text-decoration: none;">
+  <h3>Establish connections, send and receive messages</h3>
+</a>
+<p>see demo folder for details</p>
+<pre><code class="language-js"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">meshConfig</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">MeshConfig</span><span class="hl-1">(...);</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">mesh</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Mesh</span><span class="hl-1">(</span><span class="hl-2">meshConfig</span><span class="hl-1">, </span><span class="hl-2">myUUID</span><span class="hl-1">);</span><br/><br/><span class="hl-10">// deepstream signaling</span><br/><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">DeepstreamSignaling</span><span class="hl-1"> } = </span><span class="hl-2">mplaynetDeepstream</span><span class="hl-1">;</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">signaller</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">DeepstreamSignaling</span><span class="hl-1">(</span><span class="hl-5">DEEPSTREAM_URL</span><span class="hl-1">);</span><br/><span class="hl-10">// OR firebase signaling</span><br/><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">FirebaseSignaling</span><span class="hl-1"> } = </span><span class="hl-2">mplaynetFirebase</span><span class="hl-1">;</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">signaller</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">FirebaseSignaling</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">apiKey:</span><span class="hl-1"> </span><span class="hl-5">FIREBASE_API_KEY</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">authDomain:</span><span class="hl-1"> </span><span class="hl-5">FIREBASE_AUTH_DOMAIN</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">projectId:</span><span class="hl-1"> </span><span class="hl-5">FIREBASE_PROJECT_ID</span><br/><span class="hl-1">});</span><br/><span class="hl-10">// OR localStorage signaling</span><br/><span class="hl-4">const</span><span class="hl-1"> { </span><span class="hl-5">LocalSignaling</span><span class="hl-1"> } = </span><span class="hl-2">mplaynet</span><span class="hl-1">;</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">signaller</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">LocalSignaling</span><span class="hl-1">();</span><br/><br/><span class="hl-10">// create a new room...</span><br/><span class="hl-2">signaller</span><span class="hl-1">.</span><span class="hl-6">hostRoom</span><span class="hl-1">(</span><span class="hl-2">roomId</span><span class="hl-1">, </span><span class="hl-2">username</span><span class="hl-1">, </span><span class="hl-2">myUUID</span><span class="hl-1">);</span><br/><span class="hl-10">// ...or join an existin room</span><br/><span class="hl-2">signaller</span><span class="hl-1">.</span><span class="hl-6">joinRoom</span><span class="hl-1">(</span><span class="hl-2">roomId</span><span class="hl-1">, </span><span class="hl-2">username</span><span class="hl-1">, </span><span class="hl-2">myUUID</span><span class="hl-1">)</span><br/><span class="hl-1"> </span><span class="hl-10">// Triggered when a player joins the room or when he is ready to play.</span><br/><span class="hl-2">signaller</span><span class="hl-1">.</span><span class="hl-2">roomRecordEmitter</span><span class="hl-1">.</span><span class="hl-6">addEventListener</span><span class="hl-1">((</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">event</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> { </span><br/><span class="hl-1">  </span><span class="hl-10">// when all players are ready, start pairing:</span><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (....</span><span class="hl-2">all</span><span class="hl-1"> </span><span class="hl-2">players</span><span class="hl-1"> </span><span class="hl-2">ready</span><span class="hl-1">...)</span><br/><span class="hl-1">    </span><span class="hl-2">signaller</span><span class="hl-1">.</span><span class="hl-6">startPairings</span><span class="hl-1">(</span><span class="hl-2">mesh</span><span class="hl-1">).</span><span class="hl-6">then</span><span class="hl-1">((</span><span class="hl-2">ok</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">ok</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-10">// start game</span><br/><span class="hl-1">      }</span><br/><span class="hl-1">    });</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-10">// broadcast a message to all peers</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">message</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-11">ArrayBuffer</span><span class="hl-1">(</span><span class="hl-2">size</span><span class="hl-1">);</span><br/><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-6">broadcast</span><span class="hl-1">(</span><span class="hl-2">message</span><span class="hl-1">);</span><br/><br/><span class="hl-10">// broadcast a message to all peers an listen for replies</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">greeting</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TextEncoder</span><span class="hl-1">().</span><span class="hl-6">encode</span><span class="hl-1">(</span><span class="hl-3">&#39;hello all!, I am Peter!&#39;</span><span class="hl-1">).</span><span class="hl-2">buffer</span><span class="hl-1">;</span><br/><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-6">broadcastAndListen</span><span class="hl-1">(</span><span class="hl-2">greeting</span><span class="hl-1">).</span><span class="hl-6">forEach</span><span class="hl-1">(</span><span class="hl-2">promise</span><span class="hl-1"> </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-2">promise</span><span class="hl-1">.</span><span class="hl-6">then</span><span class="hl-1">(</span><span class="hl-2">reply</span><span class="hl-1"> </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TextDecoder</span><span class="hl-1">().</span><span class="hl-6">decode</span><span class="hl-1">(</span><span class="hl-2">reply</span><span class="hl-1">.</span><span class="hl-2">body</span><span class="hl-1">));</span><br/><span class="hl-1">}));</span><br/><br/><span class="hl-10">// send a message to a peer</span><br/><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-6">send</span><span class="hl-1">(</span><span class="hl-2">remotePeer</span><span class="hl-1">.</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">message</span><span class="hl-1">);</span><br/><br/><span class="hl-10">// send a message to a peer and listen for reply</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">greeting</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TextEncoder</span><span class="hl-1">().</span><span class="hl-6">encode</span><span class="hl-1">(</span><span class="hl-3">&#39;hello, I am Peter!&#39;</span><span class="hl-1">).</span><span class="hl-2">buffer</span><span class="hl-1">;</span><br/><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-6">sendAndListen</span><span class="hl-1">(</span><span class="hl-2">remotePeer</span><span class="hl-1">.</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">greeting</span><span class="hl-1">).</span><span class="hl-6">then</span><span class="hl-1">(</span><span class="hl-2">reply</span><span class="hl-1"> </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TextDecoder</span><span class="hl-1">().</span><span class="hl-6">decode</span><span class="hl-1">(</span><span class="hl-2">reply</span><span class="hl-1">.</span><span class="hl-2">body</span><span class="hl-1">));</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-10">// receive messages from remote peers</span><br/><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-2">messageEmitter</span><span class="hl-1">.</span><span class="hl-6">addEventListener</span><span class="hl-1">((</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">message</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-10">// uuid of the remote peer</span><br/><span class="hl-1">  </span><span class="hl-10">// message.timestamp : remote timestamp</span><br/><span class="hl-1">  </span><span class="hl-10">// message.timestampToLocalTime : remote timestamp converted to local time</span><br/><span class="hl-1">  </span><span class="hl-10">// message.sequence: message sequence</span><br/><span class="hl-1">  </span><span class="hl-10">// message.body: ArrayBuffer</span><br/><span class="hl-1">  </span><span class="hl-10">// message.type (1 - send ; 2 - sendAndListen ; 3 - reply ; 4 - replyAndListen)</span><br/><span class="hl-1">  </span><span class="hl-10">// i.e. info = new Int16Array(message.body);</span><br/><br/><span class="hl-1">  </span><span class="hl-10">// if the message was sent via &#39;sendAndListen&#39; or &#39;replyAndListen&#39;,</span><br/><span class="hl-1">  </span><span class="hl-10">// the peer is waiting for a reply</span><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">message</span><span class="hl-1">.</span><span class="hl-2">awaitReply</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">response</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TextEncoder</span><span class="hl-1">().</span><span class="hl-6">encode</span><span class="hl-1">(</span><span class="hl-3">&#39;nice to meet you&#39;</span><span class="hl-1">).</span><span class="hl-2">buffer</span><span class="hl-1">;</span><br/><span class="hl-1">      </span><span class="hl-10">// send the reply</span><br/><span class="hl-1">      </span><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-6">reply</span><span class="hl-1">(</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">message</span><span class="hl-1">, </span><span class="hl-2">response</span><span class="hl-1">);</span><br/><span class="hl-1">      </span><span class="hl-10">// OR send the reply and wait for a counter reply</span><br/><span class="hl-1">      </span><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-6">replyAndListen</span><span class="hl-1">(</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">message</span><span class="hl-1">, </span><span class="hl-2">response</span><span class="hl-1">).</span><span class="hl-6">then</span><span class="hl-1">(</span><span class="hl-2">counterReply</span><span class="hl-1"> </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TextDecoder</span><span class="hl-1">().</span><span class="hl-6">decode</span><span class="hl-1">(</span><span class="hl-2">counterReply</span><span class="hl-1">.</span><span class="hl-2">body</span><span class="hl-1">));</span><br/><span class="hl-1">      });</span><br/><span class="hl-1">      </span><span class="hl-0">return</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-10">// disconnection management</span><br/><span class="hl-2">mesh</span><span class="hl-1">.</span><span class="hl-2">connectionReadyEmitter</span><span class="hl-1">.</span><span class="hl-6">addEventListener</span><span class="hl-1">((</span><span class="hl-2">uuid</span><span class="hl-1">, </span><span class="hl-2">ready</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">if</span><span class="hl-1"> (!</span><span class="hl-2">ready</span><span class="hl-1">) { </span><span class="hl-10">// player disconnected</span><br/><span class="hl-1">      </span><span class="hl-10">// ...remove player from screen</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
 </code></pre>
-				<a href="#demos" id="demos" style="color: inherit; text-decoration: none;">
-					<h3>Demos</h3>
-				</a>
-				<ul>
-					<li><a href="https://0khp9.csb.app">Simple game in which you create or enter a room with other players.</a></li>
-					<li><a href="https://ix5w5.csb.app/test-planck-multi.html">Phaser + Planck.js multiplayer demo</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="modules.html">Exports</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="classes/localsignaling.html" class="tsd-kind-icon">Local<wbr>Signaling</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/mesh.html" class="tsd-kind-icon">Mesh</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/meshconfig.html" class="tsd-kind-icon">Mesh<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/message.html" class="tsd-kind-icon">Message</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/peerrecord.html" class="tsd-kind-icon">Peer<wbr>Record</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#getlocaltimestamp" class="tsd-kind-icon">get<wbr>Local<wbr>Timestamp</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#setdebug" class="tsd-kind-icon">set<wbr>Debug</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+
+<a href="#demos" id="demos" style="color: inherit; text-decoration: none;">
+  <h3>Demos</h3>
+</a>
+<ul>
+<li><a href="https://0khp9.csb.app">Simple game in which you create or enter a room with other players.</a></li>
+<li><a href="https://ix5w5.csb.app/test-planck-multi.html">Phaser + Planck.js multiplayer demo</a></li>
+</ul>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class"><a href="classes/DeepstreamSignaling.html" class="tsd-kind-icon">Deepstream<wbr/>Signaling</a></li><li class="tsd-kind-class"><a href="classes/FirebaseSignaling.html" class="tsd-kind-icon">Firebase<wbr/>Signaling</a></li><li class="tsd-kind-class"><a href="classes/LocalSignaling.html" class="tsd-kind-icon">Local<wbr/>Signaling</a></li><li class="tsd-kind-class"><a href="classes/Mesh.html" class="tsd-kind-icon">Mesh</a></li><li class="tsd-kind-class"><a href="classes/MeshConfig.html" class="tsd-kind-icon">Mesh<wbr/>Config</a></li><li class="tsd-kind-class"><a href="classes/Message.html" class="tsd-kind-icon">Message</a></li><li class="tsd-kind-class"><a href="classes/PeerRecord.html" class="tsd-kind-icon">Peer<wbr/>Record</a></li><li class="tsd-kind-function"><a href="modules.html#getLocalTimestamp" class="tsd-kind-icon">get<wbr/>Local<wbr/>Timestamp</a></li><li class="tsd-kind-function"><a href="modules.html#setDebug" class="tsd-kind-icon">set<wbr/>Debug</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li><li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li><li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>

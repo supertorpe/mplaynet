@@ -1,8 +1,8 @@
 import { DeepstreamClient } from '@deepstream/client';
 import { Record } from '@deepstream/client/dist/src/record/record';
-import { BaseSignaling } from './base-signaling';
+import { BaseSignaling } from '../base-signaling';
 import { Mesh } from '../mesh';
-import { RoomRecord, PeerRecord, PairingRecord } from './records';
+import { RoomRecord, PeerRecord, PairingRecord } from '../records';
 
 export class DeepstreamSignaling extends BaseSignaling {
 

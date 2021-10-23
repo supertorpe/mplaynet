@@ -1,7 +1,7 @@
-import firebase from "firebase/app";
-import { BaseSignaling } from "./base-signaling";
+import firebase from "firebase/compat/app";
+import { BaseSignaling } from "../base-signaling";
 import { Mesh } from "../mesh";
-import { PairingRecord, PeerRecord, RoomRecord } from "./records";
+import { PairingRecord, PeerRecord, RoomRecord } from "../records";
 
 export class FirebaseSignaling extends BaseSignaling {
 

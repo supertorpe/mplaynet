@@ -1,0 +1,6 @@
+{
+    "internal": true,
+    "main": "../dist/mplaynet-firebase.umd.js",
+    "module": "../dist/mplaynet-firebase.esm.js",
+    "types": "../dist/mplaynet-firebase.d.ts"
+}

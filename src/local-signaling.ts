@@ -1,4 +1,4 @@
-import { Mesh } from "../mesh";
+import { Mesh } from "./mesh";
 import { BaseSignaling } from "./base-signaling";
 import { RoomRecord, PeerRecord, PairingRecord } from "./records";
 
