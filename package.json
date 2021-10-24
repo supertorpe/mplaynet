@@ -1,6 +1,6 @@
 {
   "name": "mplaynet",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Mesh WebRTC library",
   "main": "dist/mplaynet.umd.js",
   "types": "dist/mplaynet.d.ts",
@@ -10,18 +10,25 @@
     ".": {
       "require": "./dist/mplaynet.umd.min.js",
       "import": "./dist/mplaynet.esm.min.js"
+    },
+    "./deepstream": {
+      "require": "./dist/mplaynet-deepstream.umd.min.js",
+      "import": "./dist/mplaynet-deepstream.esm.min.js"
+    },
+    "./firebase": {
+      "require": "./dist/mplaynet-firebase.umd.min.js",
+      "import": "./dist/mplaynet-firebase.esm.min.js"
     }
   },
   "scripts": {
     "test": "jest --coverage",
     "docs": "typedoc src/doc.ts",
     "clean": "rimraf ./dist",
-    "build:types": "tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/mplaynet.d.ts src/index.ts && tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/mplaynet-deepstream.d.ts src/deepstream/index.ts && tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/mplaynet-firebase.d.ts src/firebase/index.ts",
     "build:js": "rollup -c rollup.config.js",
     "build:minjs:umd": "terser dist/mplaynet.umd.js --compress --mangle > dist/mplaynet.umd.min.js && terser dist/mplaynet-firebase.umd.js --compress --mangle > dist/mplaynet-firebase.umd.min.js && terser dist/mplaynet-deepstream.umd.js --compress --mangle > dist/mplaynet-deepstream.umd.min.js",
     "build:minjs:esm": "terser dist/mplaynet.esm.js --compress --mangle > dist/mplaynet.esm.min.js && terser dist/mplaynet-firebase.esm.js --compress --mangle > dist/mplaynet-firebase.esm.min.js && terser dist/mplaynet-deepstream.esm.js --compress --mangle > dist/mplaynet-deepstream.esm.min.js",
     "build:minjs": "npm run build:minjs:esm -s && npm run build:minjs:umd -s",
-    "build": "npm run clean && npm run build:js -s && npm run build:minjs -s && npm run build:types -s"
+    "build": "npm run clean && npm run build:js -s && npm run build:minjs -s"
   },
   "files": [
     "src",

@@ -2,5 +2,5 @@
     "internal": true,
     "main": "../dist/mplaynet-deepstream.umd.js",
     "module": "../dist/mplaynet-deepstream.esm.js",
-    "types": "../dist/mplaynet-deepstream.d.ts"
+    "types": "../dist/deepstream/deepstream-signaling.d.ts"
 }

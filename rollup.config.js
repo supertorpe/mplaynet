@@ -2,7 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 
 export default [
   {
-    input: 'src/index.ts',
+    input: 'src/mplaynet.ts',
     external: [],
     output: [
       {
@@ -14,11 +14,11 @@ export default [
         file: 'dist/mplaynet.umd.js',
         format: 'umd',
         name: 'mplaynet',
-        globals: {
-        },
+        sourcemap: true,
+        globals: {},
       },
     ],
-    plugins: [typescript({ sourceMap: true })],
+    plugins: [typescript({ tsconfig: './tsconfig.json' })],
   },
   {
     input: 'src/deepstream/index.ts',
@@ -33,16 +33,17 @@ export default [
         file: 'dist/mplaynet-deepstream.umd.js',
         format: 'umd',
         name: 'mplaynetDeepstream',
+        sourcemap: true,
         globals: {
           '@deepstream/client': 'DeepstreamClient'
         },
       },
     ],
-    plugins: [typescript({ sourceMap: true })],
+    plugins: [typescript({ tsconfig: './tsconfig.json' })],
   },
   {
     input: 'src/firebase/index.ts',
-    external: ['firebase/app'],
+    external: ['firebase/compat/app'],
     output: [
       {
         file: 'dist/mplaynet-firebase.esm.js',
@@ -53,11 +54,12 @@ export default [
         file: 'dist/mplaynet-firebase.umd.js',
         format: 'umd',
         name: 'mplaynetFirebase',
+        sourcemap: true,
         globals: {
-          'firebase/app': 'firebase'
+          'firebase/compat/app': 'firebase'
         },
       },
     ],
-    plugins: [typescript({ sourceMap: true })],
+    plugins: [typescript({ tsconfig: './tsconfig.json' })],
   }
 ];
